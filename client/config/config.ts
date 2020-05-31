@@ -16,4 +16,11 @@ export default defineConfig({
   define: {
     API_BASE: 'http://127.0.0.1:7001',
   },
+  locale: {
+    default: 'zh-CN',
+    antd: true,
+    title: false,
+    // baseNavigator: true,
+    // baseSeparator: '-',
+  },
 });

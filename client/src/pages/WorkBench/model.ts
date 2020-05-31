@@ -55,9 +55,9 @@ const WorkBenchModal: WorkBenchModalType = {
       history.listen(({ pathname }) => {
         if (pathname === '/work-bench') {
           console.log('/work-bench');
-          dispatch({
-            type: 'fetchPatientList',
-          });
+          // dispatch({
+          //   type: 'fetchPatientList',
+          // });
         }
       });
     },

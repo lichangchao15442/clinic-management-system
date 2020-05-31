@@ -46,6 +46,27 @@ const errorHandler = (error: { response: Response }): Response => {
 };
 
 /**
+ * 处理响应/请求入参数据，删除返回值为null的数据，避免结构赋值出现问题
+ * @param response 
+ */
+const handleResponseData = (response: object) => {
+  if (!response || typeof response !== 'object') {
+    return {};
+  }
+  // JSON.stringify(response) 可直接删除属性值为undefined的属性
+  const data = JSON.parse(JSON.stringify(response), (k, v) => {
+    if (v === null) {
+      return undefined;
+    }
+    return v;
+  });
+  if (!data) {
+    return {};
+  }
+  return data;
+};
+
+/**
  * 配置request请求时的默认参数
  */
 const request = extend({
@@ -55,9 +76,19 @@ const request = extend({
 
 // request拦截器, 改变url 或 options.
 request.interceptors.request.use((url, options) => {
+  // TODO: 处理为无值的参数
+  let tempData;
+  if (options.method === 'get') {
+    tempData = options.params;
+  } else {
+    tempData = options.data;
+  }
   return {
     url: `${API_BASE}${url}`,
-    options: { ...options },
+    options: {
+      ...options,
+      ...handleResponseData(tempData), // 可过滤值为undefined/null的属性
+    },
   };
 });
 
