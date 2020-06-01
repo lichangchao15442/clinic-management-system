@@ -1,3 +1,5 @@
+import { Moment } from 'moment';
+
 // 患者数据类型
 interface PatientType {
   admissionStatus: number; // 接诊状态
@@ -11,6 +13,13 @@ interface PatientType {
   name: string;
   phone: string;
   vipLevel: number; // VIP等级
+}
+
+// 患者查询的条件
+export interface PatientListQueryType {
+  createdTime?: [Moment, Moment];
+  admissionStatus?: number;
+  search?: string;
 }
 
 export interface WorkBenchModalStateType {

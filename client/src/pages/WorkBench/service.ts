@@ -1,6 +1,8 @@
 import request from '@/utils/request';
 
-export async function fetchPatientList(params: any) {
+import { PatientListQueryType } from './data.d';
+
+export async function fetchPatientList(params: PatientListQueryType) {
   return request('/getPatientList', {
     method: 'GET',
     params,
