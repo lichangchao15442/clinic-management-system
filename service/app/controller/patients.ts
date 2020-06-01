@@ -1,5 +1,7 @@
 const Controller = require('egg').Controller;
 
+const Op = require('sequelize').Op
+
 const  toInt = (str) => {
   if (typeof str === 'number') return str;
   if (!str) return str;
@@ -9,13 +11,37 @@ const  toInt = (str) => {
 class PatientsController extends Controller {
   async index() {
     const ctx = this.ctx;
-    const query = { limit: toInt(ctx.query.limit), offset: toInt(ctx.query.offset) };
+    console.log('ctx.query', ctx.query)
+    const { pageNum = 1, pageSize = 9} = ctx.query
+    const requestQuery = JSON.parse(ctx.query.query)
+    let where: any = {}
+    Object.keys(requestQuery).map(key => {
+      if (requestQuery.hasOwnProperty(key)) {
+      console.log('requestQuery', requestQuery,key)
+        if (requestQuery[key]) {
+          if (key === 'createdTime') {
+            where.createdTime = {
+              [Op.between]:requestQuery[key]
+            }
+          }
+          if (key === 'admissionStatus') {
+            where.admissionStatus = requestQuery[key]
+          }
+          if (key === 'search') {
+            where.name = requestQuery[key].trim()
+          }
+        }}
+    })
+    const query = { limit: toInt(pageSize), offset: (toInt(pageNum)-1)*toInt(pageSize),where };
+    // 所有的患者数据
+    const allData = await ctx.model.Patients.findAll({where});
+    // 按条件查询患者
     const data = await ctx.model.Patients.findAll(query);
     ctx.body = {
       code: '1',
       data:{
         list: data,
-        total: data.length
+        total:allData.length
       }
     }
   }
