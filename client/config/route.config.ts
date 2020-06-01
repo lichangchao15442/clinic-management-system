@@ -9,4 +9,10 @@ export default [
     path: '/work-bench',
     component: 'WorkBench',
   },
+  {
+    name: '患者管理',
+    icon: 'user',
+    path: '/patients-management',
+    component: 'PatientsManagement',
+  },
 ];

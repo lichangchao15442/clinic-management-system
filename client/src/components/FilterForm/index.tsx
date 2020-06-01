@@ -7,7 +7,7 @@ import styles from './index.less'
 const { Search } = Input
 
 // 查询条件数据类型
-interface FilterFormItemType {
+export interface FilterFormItemType {
   label: string;
   name: string;
   component: ReactNode;
