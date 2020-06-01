@@ -22,12 +22,13 @@ const colProps = {
 
 interface WorkbenchProps {
   workBench: WorkBenchModalStateType;
-  dispatch: Dispatch
+  dispatch: Dispatch;
+  loading: boolean;
 }
 
 const Workbench: React.FC<WorkbenchProps> = props => {
   //props 
-  const { workBench: { patientList, total }, dispatch } = props
+  const { workBench: { patientList, total }, dispatch, loading } = props
 
   // useState
   const [query, setQuery] = useState({}) // 搜索条件
@@ -79,10 +80,23 @@ const Workbench: React.FC<WorkbenchProps> = props => {
     })
   }
 
+  // 处理查询表单参数
+  const doParseQueryValue = (values: Store) => {
+    return {
+      ...values,
+      search: values.search.trim()
+    }
+  }
+
   // 处理搜索事件
   const doSearch = (values: Store) => {
     console.log('doSearch', values)
-    setQuery(values)
+    setQuery(doParseQueryValue(values))
+    // 从第一页开始显示
+    setPagination({
+      ...pagination,
+      pageNum: 1
+    })
   }
 
   // 查询表单组件的props
@@ -95,6 +109,7 @@ const Workbench: React.FC<WorkbenchProps> = props => {
   return <Card
     className="card-no-border"
     title={<FilterForm  {...FilterFormProps} />}
+    loading={loading}
   >
     <Row>
       {patientList.map(item => {
@@ -163,4 +178,11 @@ const Workbench: React.FC<WorkbenchProps> = props => {
   </Card>
 }
 
-export default connect(({ workBench }: { workBench: WorkBenchModalStateType }) => ({ workBench }))(Workbench)
+export default connect(({ workBench, loading }: {
+  workBench: WorkBenchModalStateType;
+  loading: {
+    effects: {
+      [key: string]: boolean;
+    }
+  }
+}) => ({ workBench, loading: loading.effects['workBench/fetchPatientList'] }))(Workbench)
