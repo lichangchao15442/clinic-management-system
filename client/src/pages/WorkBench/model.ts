@@ -1,4 +1,4 @@
-import { Subscription, Effect, Reducer } from 'umi';
+import { Effect, Reducer } from 'umi';
 
 import { WorkBenchModalStateType } from './data.d';
 import { fetchPatientList } from './service';
@@ -11,9 +11,6 @@ interface WorkBenchModalType {
   };
   reducers: {
     save: Reducer;
-  };
-  subscriptions: {
-    setup: Subscription;
   };
 }
 
@@ -47,19 +44,6 @@ const WorkBenchModal: WorkBenchModalType = {
         ...state,
         ...payload,
       };
-    },
-  },
-
-  subscriptions: {
-    setup({ history, dispatch }) {
-      history.listen(({ pathname }) => {
-        if (pathname === '/work-bench') {
-          console.log('/work-bench');
-          // dispatch({
-          //   type: 'fetchPatientList',
-          // });
-        }
-      });
     },
   },
 };
