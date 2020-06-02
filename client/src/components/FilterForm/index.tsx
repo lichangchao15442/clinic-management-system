@@ -16,12 +16,16 @@ interface FilterFormProps {
   filterFormItems: FilterFormItemType[]; // 查询条件列表
   searchPlaceholder: string; // 搜索框的placeholder
   doSearch: (values: Store) => void; // 搜索交互
+  getForm?: (form: any) => void
 }
 
-const FilterForm: React.FC<FilterFormProps> = ({ filterFormItems = [], searchPlaceholder, doSearch }) => {
+const FilterForm: React.FC<FilterFormProps> = ({ filterFormItems = [], searchPlaceholder, doSearch, getForm }) => {
 
   const [form] = Form.useForm()
   const { getFieldsValue } = form
+
+  // 将form暴露给父组件
+  getForm && getForm(form)
   // 处理搜索点击事件
   const onSearch = async () => {
     // 手动收集表单的值

@@ -93,14 +93,15 @@ const ChargeManagement: React.FC<ChargeManagementProps> = props => {
   const { orderList, total } = chargeManagement
 
   // useState
-  const [curChargeStatus, setCurChargeStatus] = useState({ key: 'chargeStatus', value: CHARGE_STATUSES[0].value }) // 当前收费状态按钮组选中按钮的键值
+  const [curChargeStatus, setCurChargeStatus] = useState([{ key: 'chargeStatus', value: CHARGE_STATUSES[0].value }]) // 当前收费状态按钮组选中按钮的键值
   const [curColumns, setCurColumns] = useState(basicColumns) // 当前columns
 
   // 根据收费状态不同，处理columns的不同
   useEffect(() => {
     let columns: any[] = _.cloneDeep(basicColumns)
     let ownColumns: any[]
-    switch (curChargeStatus.value) {
+    const type = curChargeStatus.find(item => item.key === 'chargeStatus')?.value
+    switch (type) {
       case 1:
         ownColumns = [
           {
@@ -207,10 +208,10 @@ const ChargeManagement: React.FC<ChargeManagementProps> = props => {
 
   // Radio.Group选项变化时的回调函数
   const onChange = (e: RadioChangeEvent) => {
-    setCurChargeStatus({
-      ...curChargeStatus,
+    setCurChargeStatus([{
+      key: 'chargeStatus',
       value: e.target.value
-    })
+    }])
   }
 
   // 左上角的按钮组

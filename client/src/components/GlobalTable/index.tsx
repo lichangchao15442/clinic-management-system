@@ -1,8 +1,9 @@
-import React, { useState, useEffect, ReactNode } from 'react'
-import { Card, Table, Spin } from 'antd'
+import React, { useState, useEffect, ReactNode, useRef } from 'react'
+import { Card, Table, Spin, Row, Col } from 'antd'
 import { connect, Dispatch } from 'umi'
 import { Store } from 'rc-field-form/lib/interface'
 import _ from 'lodash'
+import { FormInstance } from 'antd/lib/form'
 
 import FilterForm, { FilterFormItemType } from '../FilterForm'
 import styles from './index.less'
@@ -23,10 +24,11 @@ interface GlobalTableProps {
   searchPlaceholder: string; //搜索框的placeholder
   extra?: ReactNode; // GlobalTable的右上角（一般为按钮组件）
   title?: ReactNode; // GlobalTable的左上角（一般为按钮组/tab组件）
-  titleField?: { // title的字段名和选中的值
+  subTitle?: ReactNode; // 二级tab面板
+  titleField?: { // title和subTitle的字段名和选中的值
     key: string;
     value: any;
-  }
+  }[]
 }
 
 const GlobalTable: React.FC<GlobalTableProps> = ({
@@ -40,12 +42,21 @@ const GlobalTable: React.FC<GlobalTableProps> = ({
   searchPlaceholder,
   extra,
   title,
-  titleField
+  titleField = [],
+  subTitle
 }) => {
   // useState
   const [data, setData] = useState<any[]>([]) // table数据源
   const [query, setQuery] = useState({}) // 查询条件参数
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 }) // 分页参数
+
+  // useRef
+  const filterForm = useRef<FormInstance>() // filterForma的form
+
+  // 获取FilterForm的form
+  const getForm = (form: FormInstance) => {
+    filterForm.current = form
+  }
 
   // 为数据源增加序号
   useEffect(() => {
@@ -63,14 +74,20 @@ const GlobalTable: React.FC<GlobalTableProps> = ({
       ...pagination,
       pageNum: 1
     })
+    // 清空query和FilterForm表单
+    setQuery({})
+    filterForm.current && filterForm.current.resetFields()
     // console.log('titleField', titleField)
   }, [titleField])
 
   // 请求数据(查询条件、分页、tab切换改变就重新请求)
   useEffect(() => {
-    if (titleField) { // 当存在tab切换面板时
+    if (titleField.length) { // 当存在tab切换面板时
       let newQuery: { [key: string]: any } = _.cloneDeep(query)
-      newQuery[titleField.key] = titleField.value
+      titleField.map(item => {
+        newQuery[item.key] = item.value
+        return item
+      })
       dispatch({
         type: dispatchType,
         payload: {
@@ -119,10 +136,12 @@ const GlobalTable: React.FC<GlobalTableProps> = ({
     setQuery(doParseQueryValue(values))
   }
 
+
   const FilterFormProps = {
     filterFormItems,
     searchPlaceholder,
-    doSearch
+    doSearch,
+    getForm
   }
 
   return <Card
@@ -130,22 +149,47 @@ const GlobalTable: React.FC<GlobalTableProps> = ({
     title={title}
     extra={extra}
   >
-    <FilterForm  {...FilterFormProps} />
-    <Spin tip="正在加载中..." spinning={loading.effects[dispatchType]}>
-      <Table
-        columns={columns}
-        dataSource={data}
-        pagination={{
-          total,
-          current: pagination.pageNum,
-          pageSize: pagination.pageSize,
-          showQuickJumper: true,
-          showTotal: total => `每页${pagination.pageSize}条，共${total}条`,
-          onChange: onPageNumChange,
-          onShowSizeChange: onPageSizeChange
-        }}
-      />
-    </Spin>
+    {subTitle ?
+      <Row gutter={24}>
+        <Col span={6}>{subTitle}</Col>
+        <Col span={18}>
+          <FilterForm  {...FilterFormProps} />
+          <Spin tip="正在加载中..." spinning={loading.effects[dispatchType]}>
+            <Table
+              columns={columns}
+              dataSource={data}
+              pagination={{
+                total,
+                current: pagination.pageNum,
+                pageSize: pagination.pageSize,
+                showQuickJumper: true,
+                showTotal: total => `每页${pagination.pageSize}条，共${total}条`,
+                onChange: onPageNumChange,
+                onShowSizeChange: onPageSizeChange
+              }}
+            />
+          </Spin>
+        </Col>
+      </Row> :
+      <>
+        <FilterForm  {...FilterFormProps} />
+        <Spin tip="正在加载中..." spinning={loading.effects[dispatchType]}>
+          <Table
+            columns={columns}
+            dataSource={data}
+            pagination={{
+              total,
+              current: pagination.pageNum,
+              pageSize: pagination.pageSize,
+              showQuickJumper: true,
+              showTotal: total => `每页${pagination.pageSize}条，共${total}条`,
+              onChange: onPageNumChange,
+              onShowSizeChange: onPageSizeChange
+            }}
+          />
+        </Spin>
+      </>
+    }
   </Card>
 }
 

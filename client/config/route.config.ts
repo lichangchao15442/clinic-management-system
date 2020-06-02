@@ -21,4 +21,16 @@ export default [
     path: '/charge-management',
     component: 'ChargeManagement',
   },
+  {
+    name: '系统设置',
+    icon: 'setting',
+    path: '/system-settings',
+    routes: [
+      {
+        name: '字典表维护',
+        path: '/system-settings/dictionary-table-maintenance',
+        component: 'SystemSettings/DictionaryTableMaintenance',
+      },
+    ],
+  },
 ];
