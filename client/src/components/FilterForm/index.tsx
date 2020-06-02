@@ -18,7 +18,7 @@ interface FilterFormProps {
   doSearch: (values: Store) => void; // 搜索交互
 }
 
-const FilterForm: React.FC<FilterFormProps> = ({ filterFormItems, searchPlaceholder, doSearch }) => {
+const FilterForm: React.FC<FilterFormProps> = ({ filterFormItems = [], searchPlaceholder, doSearch }) => {
 
   const [form] = Form.useForm()
   const { getFieldsValue } = form

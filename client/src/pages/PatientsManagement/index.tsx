@@ -54,7 +54,7 @@ const columns = [
   {
     dataIndex: 'createdTime',
     title: '创建时间',
-    render: (createdTime: string) => <span>{createdTime && moment(createdTime).format('YYYY-MM-DD HH:mm:ss')}</span>,
+    render: (createdTime: string) => <span>{createdTime && moment(createdTime).utc().format('YYYY-MM-DD HH:mm:ss')}</span>,
     align: 'center'
   },
   {
@@ -64,7 +64,7 @@ const columns = [
   },
   {
     title: '操作',
-    render: (record: PatientType) => <div className={styles.operate}>
+    render: (record: PatientType) => <div className="table-operate">
       <div>接诊</div>
       <div>编辑</div>
       <div>设置会员</div>

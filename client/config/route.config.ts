@@ -15,4 +15,10 @@ export default [
     path: '/patients-management',
     component: 'PatientsManagement',
   },
+  {
+    name: '收费管理',
+    icon: 'dollar',
+    path: '/charge-management',
+    component: 'ChargeManagement',
+  },
 ];

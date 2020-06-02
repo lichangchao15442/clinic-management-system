@@ -2,6 +2,7 @@ import React, { useState, useEffect, ReactNode } from 'react'
 import { Card, Table, Spin } from 'antd'
 import { connect, Dispatch } from 'umi'
 import { Store } from 'rc-field-form/lib/interface'
+import _ from 'lodash'
 
 import FilterForm, { FilterFormItemType } from '../FilterForm'
 import styles from './index.less'
@@ -20,19 +21,26 @@ interface GlobalTableProps {
   };
   filterFormItems: FilterFormItemType[]; //查询条件列表
   searchPlaceholder: string; //搜索框的placeholder
-  extra: ReactNode; // GlobalTable的右上角（一般为按钮组件）
+  extra?: ReactNode; // GlobalTable的右上角（一般为按钮组件）
+  title?: ReactNode; // GlobalTable的左上角（一般为按钮组/tab组件）
+  titleField?: { // title的字段名和选中的值
+    key: string;
+    value: any;
+  }
 }
 
 const GlobalTable: React.FC<GlobalTableProps> = ({
   columns,
-  dataSource,
+  dataSource = [],
   total,
   dispatch,
   dispatchType,
   loading,
   filterFormItems,
   searchPlaceholder,
-  extra
+  extra,
+  title,
+  titleField
 }) => {
   // useState
   const [data, setData] = useState<any[]>([]) // table数据源
@@ -48,15 +56,37 @@ const GlobalTable: React.FC<GlobalTableProps> = ({
     setData(newData)
   }, [dataSource])
 
-  // 请求数据
+  // tab面板切换时触发
   useEffect(() => {
-    dispatch({
-      type: dispatchType,
-      payload: {
-        query,
-        ...pagination
-      }
+    // 面板切换，分页从第一页开始
+    setPagination({
+      ...pagination,
+      pageNum: 1
     })
+    // console.log('titleField', titleField)
+  }, [titleField])
+
+  // 请求数据(查询条件、分页、tab切换改变就重新请求)
+  useEffect(() => {
+    if (titleField) { // 当存在tab切换面板时
+      let newQuery: { [key: string]: any } = _.cloneDeep(query)
+      newQuery[titleField.key] = titleField.value
+      dispatch({
+        type: dispatchType,
+        payload: {
+          query: newQuery,
+          ...pagination
+        }
+      })
+    } else {
+      dispatch({
+        type: dispatchType,
+        payload: {
+          query,
+          ...pagination
+        }
+      })
+    }
   }, [query, pagination])
 
   // pageNum改变触发的回调
@@ -97,7 +127,7 @@ const GlobalTable: React.FC<GlobalTableProps> = ({
 
   return <Card
     className={styles.globalTableCard}
-    // title="全局table的title"
+    title={title}
     extra={extra}
   >
     <FilterForm  {...FilterFormProps} />

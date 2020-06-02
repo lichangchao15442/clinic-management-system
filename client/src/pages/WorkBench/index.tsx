@@ -145,7 +145,7 @@ const Workbench: React.FC<WorkbenchProps> = props => {
                   <div>
                     <div>
                       <span>创建时间：</span>
-                      <span>{item.createdTime && moment(item.createdTime).format('YYYY-MM-DD HH:mm:ss')}</span>
+                      <span>{item.createdTime && moment(item.createdTime).utc().format('YYYY-MM-DD HH:mm:ss')}</span>
                     </div>
                     <div>
                       <span>科室：</span>
