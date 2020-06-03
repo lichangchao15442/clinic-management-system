@@ -11,7 +11,10 @@ export default (appInfo: EggAppInfo) => {
   config.middleware = [];
 
   config.security = {
-    domainWhiteList:['http://localhost:8000']
+    domainWhiteList: ['http://localhost:8000'],
+    csrf: {
+      enable: false,
+    },
   }
 
   config.sequelize = {
@@ -20,7 +23,8 @@ export default (appInfo: EggAppInfo) => {
     port: 3306,
     database: 'clinic',
     // user: 'root',
-    password: '1qaz!QAZ'
+    password: '1qaz!QAZ',
+    // timezone: '+08:00'
   };
 
   // add your special config in here

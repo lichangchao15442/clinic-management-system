@@ -2,12 +2,16 @@
 // Do not modify this file!!!!!!!!!
 
 import 'egg';
+import ExportDictionary from '../../../app/controller/dictionary';
 import ExportHome from '../../../app/controller/home';
+import ExportOrders from '../../../app/controller/orders';
 import ExportPatients from '../../../app/controller/patients';
 
 declare module 'egg' {
   interface IController {
+    dictionary: ExportDictionary;
     home: ExportHome;
+    orders: ExportOrders;
     patients: ExportPatients;
   }
 }

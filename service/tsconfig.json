@@ -20,7 +20,10 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "inlineSourceMap": true,
-    "importHelpers": true
+    "importHelpers": true,
+    "lib": [
+      "es2015"
+  ]
   },
   "exclude": [
     "app/public",

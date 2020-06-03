@@ -28,27 +28,27 @@ const hasValue = (value) => {
   return !isEmpty
 }
 
-class PatientsController extends Controller {
+class OrdersController extends Controller {
   async index() {
     const ctx = this.ctx;
     console.log('ctx.query', ctx.query)
-    const { pageNum = 1, pageSize = 9} = ctx.query
+    const { pageNum = 1, pageSize = 10} = ctx.query
     const requestQuery = JSON.parse(ctx.query.query)
     let where: any = {}
     Object.keys(requestQuery).map(key => {
       if (requestQuery.hasOwnProperty(key)) {
-      console.log('requestQuery', requestQuery,key)
         if (hasValue(requestQuery[key])) {
+          console.log('requestQuery',requestQuery,key)
           if (key === 'createdTime') {
             where.createdTime = {
               [Op.between]:requestQuery[key]
             }
           }
-          if (key === 'admissionStatus') {
-            where.admissionStatus = requestQuery[key]
+          if (key === 'type') {
+            where.type = requestQuery[key]
           }
-          if (key === 'vipLevel') {
-            where.vipLevel = requestQuery[key]
+          if (key === 'chargeStatus') {
+            where.chargeStatus = requestQuery[key]
           }
           if (key === 'search') {
             where[Op.or] = [
@@ -56,18 +56,18 @@ class PatientsController extends Controller {
                 name: requestQuery[key].trim(),
               },
               {
-                phone:requestQuery[key].trim()
+                number:requestQuery[key].trim()
               }
             ]
           }
         }}
     })
-    console.log('where',where)
     const query = { limit: toInt(pageSize), offset: (toInt(pageNum)-1)*toInt(pageSize),where };
-    // 所有的患者数据
-    const allData = await ctx.model.Patients.findAll({where});
-    // 按条件查询患者
-    const data = await ctx.model.Patients.findAll(query);
+    // // 所有的患者数据
+    const allData = await ctx.model.Orders.findAll({where});
+    // // 按条件查询患者
+    const data = await ctx.model.Orders.findAll(query);
+    
     ctx.body = {
       code: '1',
       data:{
@@ -118,4 +118,6 @@ class PatientsController extends Controller {
   }
 }
 
-module.exports = PatientsController;
+export {}
+
+module.exports = OrdersController;
