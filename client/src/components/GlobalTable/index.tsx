@@ -28,7 +28,8 @@ interface GlobalTableProps {
   titleField?: { // title和subTitle的字段名和选中的值
     key: string;
     value: any;
-  }[]
+  }[];
+  isRefresh?: boolean; // 是否刷新列表
 }
 
 const GlobalTable: React.FC<GlobalTableProps> = ({
@@ -43,7 +44,8 @@ const GlobalTable: React.FC<GlobalTableProps> = ({
   extra,
   title,
   titleField = [],
-  subTitle
+  subTitle,
+  isRefresh
 }) => {
   // useState
   const [data, setData] = useState<any[]>([]) // table数据源
@@ -69,6 +71,7 @@ const GlobalTable: React.FC<GlobalTableProps> = ({
 
   // tab面板切换时触发
   useEffect(() => {
+    // console.log('isRefresh-GlobalTable', isRefresh)
     // 面板切换，分页从第一页开始
     setPagination({
       ...pagination,
@@ -78,7 +81,7 @@ const GlobalTable: React.FC<GlobalTableProps> = ({
     setQuery({})
     filterForm.current && filterForm.current.resetFields()
     // console.log('titleField', titleField)
-  }, [titleField])
+  }, [titleField, isRefresh])
 
   // 请求数据(查询条件、分页、tab切换改变就重新请求)
   useEffect(() => {

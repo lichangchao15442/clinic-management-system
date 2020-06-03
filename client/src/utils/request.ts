@@ -3,7 +3,7 @@
  * 更详细的 api 文档: https://github.com/umijs/umi-request
  */
 import { extend } from 'umi-request';
-import { notification } from 'antd';
+import { notification, message } from 'antd';
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -47,7 +47,7 @@ const errorHandler = (error: { response: Response }): Response => {
 
 /**
  * 处理响应/请求入参数据，删除返回值为null的数据，避免结构赋值出现问题
- * @param response 
+ * @param response
  */
 const handleResponseData = (response: object) => {
   if (!response || typeof response !== 'object') {
@@ -90,6 +90,18 @@ request.interceptors.request.use((url, options) => {
       ...handleResponseData(tempData), // 可过滤值为undefined/null的属性
     },
   };
+});
+
+// 克隆响应对象做解析处理
+request.interceptors.response.use(async response => {
+  const res = await response.clone().json();
+  const { code = '', msg = '' } = res;
+  if (code !== '1') {
+    message.warning(msg);
+  } else {
+    return handleResponseData(res);
+  }
+  return response;
 });
 
 export default request;

@@ -54,7 +54,7 @@ const columns = [
   {
     dataIndex: 'createdTime',
     title: '创建时间',
-    render: (createdTime: string) => <span>{createdTime && moment(createdTime).utc().format('YYYY-MM-DD HH:mm:ss')}</span>,
+    render: (createdTime: string) => <span>{createdTime && moment(createdTime).format('YYYY-MM-DD HH:mm:ss')}</span>,
     align: 'center'
   },
   {

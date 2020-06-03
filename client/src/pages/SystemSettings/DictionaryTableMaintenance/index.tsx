@@ -1,363 +1,42 @@
-import React, { useState, useEffect } from 'react'
-import { Radio, Select } from 'antd'
+import React, { useState, useEffect, useRef } from 'react'
+import { Radio, Button } from 'antd'
 import { RadioChangeEvent } from 'antd/lib/radio'
 import _ from 'lodash'
 import { connect } from 'umi'
 import moment from 'moment'
+import { PlusCircleFilled } from '@ant-design/icons'
+import { FormInstance } from 'antd/lib/form'
+import { Store } from 'rc-field-form/lib/interface'
 
 import GlobalTable from '@/components/GlobalTable'
-import { DICTIONARY_TYPES, CHIEF_COMPLAINT_TYPES, PRESCRIPTION_TYPES } from '@/utils/dataDictionary'
+import { DICTIONARY_TYPES } from '@/utils/dataDictionary'
+import request from '@/utils/request'
+import { FormItemType } from '@/typings'
+import { ownParams } from './utils/dataDictionary'
 import { DictionaryTableMaintenanceState, DictionaryType } from './data'
+import { AddOrEditModal } from './components'
 import styles from './index.less'
 
-const { Option } = Select
 
-const basicColumns = [
-  {
-    dataIndex: 'key',
-    title: '序号',
-    align: 'center'
-  },
-  {
-    dataIndex: 'createdTime',
-    title: '创建时间',
-    align: 'center',
-    render: (createdTime: string) => <span>{createdTime && moment(createdTime).utc().format('YYYY-MM-DD HH:mm:ss')}</span>
-  },
-  {
-    dataIndex: 'creator',
-    title: '创建人',
-    align: 'center'
-  },
-  {
-    title: '操作',
-    align: 'center',
-    render: (record: DictionaryType) => <div style={{ width: 80 }} className="table-operate">
-      <div>编辑</div>
-      <div>删除</div>
-    </div>
-  }
-]
 
-const ownParams = [
-  {
-    dictionaryType: 1,
-    subDictionaryType: 1,
-    columns: [
-      {
-        dataIndex: 'name',
-        title: '诊断内容',
-        align: 'center'
-      }
-    ],
-    searchPlaceholder: '模版内容'
-  },
-  {
-    dictionaryType: 1,
-    subDictionaryType: 2,
-    columns: [
-      {
-        dataIndex: 'name',
-        title: '医嘱内容',
-        align: 'center'
-      }
-    ],
-    searchPlaceholder: '模版内容'
-  },
-  {
-    dictionaryType: 1,
-    subDictionaryType: 3,
-    columns: [
-      {
-        dataIndex: 'type',
-        title: '分类',
-        align: 'center',
-        render: (type: number) => <span>{CHIEF_COMPLAINT_TYPES.find(item => item.value === type)?.label}</span>
-      },
-      {
-        dataIndex: 'name',
-        title: '主诉内容',
-        align: 'center'
-      },
-    ],
-    searchPlaceholder: '主诉内容',
-    filterFormItems: [
-      {
-        label: '主诉分类',
-        name: 'type',
-        component: <Select style={{ width: 100 }} allowClear={true}>
-          {CHIEF_COMPLAINT_TYPES.map(item => <Option key={item.value} value={item.value}>{item.label}</Option>)}
-        </Select>
-      }
-    ]
-  },
-  {
-    dictionaryType: 1,
-    subDictionaryType: 4,
-    columns: [
-      {
-        dataIndex: 'name',
-        title: '现病史',
-        align: 'center'
-      }
-    ],
-    searchPlaceholder: '内容'
-  },
-  {
-    dictionaryType: 1,
-    subDictionaryType: 5,
-    columns: [
-      {
-        dataIndex: 'name',
-        title: '既往史',
-        align: 'center'
-      }
-    ],
-    searchPlaceholder: '内容'
-  },
-  {
-    dictionaryType: 1,
-    subDictionaryType: 6,
-    columns: [
-      {
-        dataIndex: 'name',
-        title: '过敏史',
-        align: 'center'
-      }
-    ],
-    searchPlaceholder: '内容'
-  },
-  {
-    dictionaryType: 1,
-    subDictionaryType: 7,
-    columns: [
-      {
-        dataIndex: 'name',
-        title: '个人史',
-        align: 'center'
-      }
-    ],
-    searchPlaceholder: '内容'
-  },
-  {
-    dictionaryType: 1,
-    subDictionaryType: 8,
-    columns: [
-      {
-        dataIndex: 'name',
-        title: '辅助检查情况',
-        align: 'center'
-      }
-    ],
-    searchPlaceholder: '内容'
-  },
-  {
-    dictionaryType: 1,
-    subDictionaryType: 9,
-    columns: [
-      {
-        dataIndex: 'name',
-        title: '治疗意见',
-        align: 'center'
-      }
-    ],
-    searchPlaceholder: '内容'
-  },
-  {
-    dictionaryType: 2,
-    subDictionaryType: 1,
-    columns: [
-      {
-        dataIndex: 'type',
-        title: '处方分类',
-        align: 'center',
-        render: (type: number) => <span>{PRESCRIPTION_TYPES.find(item => item.value === type)?.label}</span>
-      },
-      {
-        dataIndex: 'name',
-        title: '分类名称',
-        align: 'center',
-      }
-    ],
-    searchPlaceholder: '分类名称',
-    filterFormItems: [
-      {
-        label: '处方类别',
-        name: 'type',
-        component: <Select style={{ width: 120 }} allowClear={true}>
-          {PRESCRIPTION_TYPES.map(item => <Option key={item.value} value={item.value}>{item.label}</Option>)}
-        </Select>
-      }
-    ]
-  },
-  {
-    dictionaryType: 2,
-    subDictionaryType: 2,
-    columns: [
-      {
-        dataIndex: 'type',
-        title: '处方分类',
-        align: 'center',
-        render: (type: number) => <span>{PRESCRIPTION_TYPES.find(item => item.value === type)?.label}</span>
-      },
-      {
-        dataIndex: 'name',
-        title: '用法名称',
-        align: 'center',
-      }
-    ],
-    searchPlaceholder: '用法名称',
-    filterFormItems: [
-      {
-        label: '处方类别',
-        name: 'type',
-        component: <Select style={{ width: 120 }} allowClear={true}>
-          {PRESCRIPTION_TYPES.map(item => <Option key={item.value} value={item.value}>{item.label}</Option>)}
-        </Select>
-      }
-    ]
-  },
-  {
-    dictionaryType: 2,
-    subDictionaryType: 3,
-    columns: [
-      {
-        dataIndex: 'name',
-        title: '剂型名称',
-        align: 'center',
-      }
-    ],
-    searchPlaceholder: '剂型名称'
-  },
-  {
-    dictionaryType: 2,
-    subDictionaryType: 4,
-    columns: [
-      {
-        dataIndex: 'name',
-        title: '项目名称',
-        align: 'center',
-      }
-    ],
-    searchPlaceholder: '项目名称'
-  },
-  {
-    dictionaryType: 2,
-    subDictionaryType: 5,
-    columns: [
-      {
-        dataIndex: 'name',
-        title: '厂家名称',
-        align: 'center',
-      }
-    ],
-    searchPlaceholder: '厂家名称'
-  },
-  {
-    dictionaryType: 2,
-    subDictionaryType: 6,
-    columns: [
-      {
-        dataIndex: 'name',
-        title: '单位名称',
-        align: 'center',
-      }
-    ],
-    searchPlaceholder: '单位名称'
-  },
-  {
-    dictionaryType: 2,
-    subDictionaryType: 7,
-    columns: [
-      {
-        dataIndex: 'name',
-        title: '入库类型',
-        align: 'center',
-      }
-    ],
-    searchPlaceholder: '入库类型'
-  },
-  {
-    dictionaryType: 2,
-    subDictionaryType: 8,
-    columns: [
-      {
-        dataIndex: 'name',
-        title: '出库类型',
-        align: 'center',
-      }
-    ],
-    searchPlaceholder: '出库类型'
-  },
-  {
-    dictionaryType: 3,
-    subDictionaryType: 1,
-    columns: [
-      {
-        dataIndex: 'name',
-        title: '分类名称',
-        align: 'center',
-      }
-    ],
-    searchPlaceholder: '分类名称'
-  },
-  {
-    dictionaryType: 3,
-    subDictionaryType: 2,
-    columns: [
-      {
-        dataIndex: 'name',
-        title: '单位名称',
-        align: 'center',
-      }
-    ],
-    searchPlaceholder: '单位名称'
-  },
-  {
-    dictionaryType: 4,
-    subDictionaryType: 1,
-    columns: [
-      {
-        dataIndex: 'name',
-        title: '来源名称',
-        align: 'center',
-      }
-    ],
-    searchPlaceholder: '来源名称'
-  },
-  {
-    dictionaryType: 4,
-    subDictionaryType: 2,
-    columns: [
-      {
-        dataIndex: 'name',
-        title: '学历名称',
-        align: 'center',
-      }
-    ],
-    searchPlaceholder: '学历名称'
-  },
-  {
-    dictionaryType: 4,
-    subDictionaryType: 3,
-    columns: [
-      {
-        dataIndex: 'name',
-        title: '职业名称',
-        align: 'center',
-      }
-    ],
-    searchPlaceholder: '职业名称'
-  },
-]
+interface OwnParamType {
+  dictionaryType: number; // 一级按钮组类型
+  subDictionaryType: number; // 二级按钮组类型
+  columns: any[]; // 不同类型的按钮的table组件单独的columns
+  searchPlaceholder: string; // 不同类型的按钮的FilterForm组件单独的searchPlaceholder
+  modalTitel: string; // 不同类型的按钮的新增/编辑modal的title
+  modalFormItems: FormItemType[]; // 不同类型的按钮的新增/编辑modal的表单项集合
+  filterFormItems?: FormItemType[]; // 不同类型的按钮的查询表单的表单项集合
+}
 
 interface DictionaryTableMaintenanceProps {
-  dictionaryTableMaintenance: DictionaryTableMaintenanceState
+  dictionaryTableMaintenance: DictionaryTableMaintenanceState;
 }
 
 const DictionaryTableMaintenance: React.FC<DictionaryTableMaintenanceProps> = props => {
   // props
   const { dictionaryTableMaintenance: { dictionaryList, total } } = props
+
   // useStatus
   const [titleField, setTitleField] = useState([
     { key: 'dictionaryType', value: DICTIONARY_TYPES[0].value },
@@ -365,13 +44,94 @@ const DictionaryTableMaintenance: React.FC<DictionaryTableMaintenanceProps> = pr
   ]) // 当前选中的一级tab和二级tab值
   const [columns, setColumns] = useState<any[]>([]) // 当前选中的table的columns
   const [searchPlaceholder, setSearchPlaceholder] = useState('') // 当前选中的table的searchPlaceholder
-  const [filterFormItems, setFilterFormItems] = useState([]) // 当前选中的table的filterFormItems
+  const [filterFormItems, setFilterFormItems] = useState<FormItemType[]>([]) // 当前选中的table的filterFormItems
+  const [modalVisible, setModalVisible] = useState(false) // 新增/编辑的modal的可见性
+  const [modalProps, setModalProps] = useState<{ title: string; formItems: FormItemType[] }>({ title: ownParams[0].name || '', formItems: ownParams[0].modalFormItems || [] }) // modal的数据，包括标题的表单项集合
+  const [isRefresh, setIsRefresh] = useState(false) // 是否刷新当前列表
+  const [modalType, setModalType] = useState<'add' | 'edit'>('add') // modal的操作类型
+
+  // useRef
+  const modalForm = useRef<FormInstance>() // modal的form
+  const currentDictionaryId = useRef<number>() // 当前编辑的数据的ID
+
+  // console.log('isRefresh', isRefresh)
+
+  // 得到modal的form
+  const getForm = (form: FormInstance) => {
+    modalForm.current = form
+  }
+
+  // 增加字典数据
+  const onAddDictionary = () => {
+    // 改变modal的操作类型为add
+    setModalType('add')
+    // 显示modal
+    setModalVisible(true)
+  }
+
+  // 删除某条数字典表数据
+  const onRemoveDictionary = (id: number) => {
+    const promise = request('/deleteDictionary', {
+      method: 'DELETE',
+      data: {
+        id
+      }
+    })
+    promise.then((res) => {
+      if (res.code === '1') { // 操作成功
+        // 刷新列表
+        console.log('onRemoveDictionary-isRefresh', isRefresh)
+        // 注意：此处有一个bug：只能取到初始的isRefresh，原因：列表的列名改变导致
+        setIsRefresh(!isRefresh)
+      }
+    })
+  }
+
+  // 编辑某条字典表数据
+  const onEditDictionary = (record: DictionaryType) => {
+    // 将编辑的数据保存ID，用于传递给后台
+    currentDictionaryId.current = record.id
+    // 改变当前modal操作类型为edit
+    setModalType('edit')
+    // 显示modal
+    setModalVisible(true)
+    // 给modal中的表单赋值
+    modalForm.current?.setFieldsValue(record)
+  }
+
+  // 公共列名
+  const basicColumns = [
+    {
+      dataIndex: 'key',
+      title: '序号',
+      align: 'center'
+    },
+    {
+      dataIndex: 'createdTime',
+      title: '创建时间',
+      align: 'center',
+      render: (createdTime: string) => <span>{createdTime && moment(createdTime).format('YYYY-MM-DD HH:mm:ss')}</span>
+    },
+    {
+      dataIndex: 'creator',
+      title: '创建人',
+      align: 'center'
+    },
+    {
+      title: '操作',
+      align: 'center',
+      render: (record: DictionaryType) => <div style={{ width: 80 }} className="table-operate">
+        <Button type="link" onClick={() => { onEditDictionary(record) }}>编辑</Button>
+        <Button type="link" onClick={() => { onRemoveDictionary(record.id) }}>删除</Button>
+      </div>
+    }
+  ]
 
   // titleField不同，参数不同 
   useEffect(() => {
     const newColumns = _.cloneDeep(basicColumns)
     // 需保证ownColumns中类型值与数据字典中的类型之保持一致！！！
-    const ownParam: { [key: string]: any } | undefined = ownParams.find(item => {
+    const ownParam: OwnParamType = ownParams.find(item => {
       const currentDictionaryType = titleField.find(item => item.key === 'dictionaryType')?.value
       const currentSubDictionaryType = titleField.find(item => item.key === 'subDictionaryType')?.value
       return item.dictionaryType === currentDictionaryType && item.subDictionaryType === currentSubDictionaryType
@@ -385,7 +145,13 @@ const DictionaryTableMaintenance: React.FC<DictionaryTableMaintenanceProps> = pr
       setSearchPlaceholder(ownParam.searchPlaceholder)
 
       // filterFormItems不同
-      setFilterFormItems(ownParam.filterFormItems)
+      setFilterFormItems(ownParam.filterFormItems || [])
+
+      // modalProps不同
+      setModalProps({
+        title: ownParam.modalTitel,
+        formItems: ownParam.modalFormItems || []
+      })
     }
   }, [titleField])
 
@@ -406,6 +172,54 @@ const DictionaryTableMaintenance: React.FC<DictionaryTableMaintenanceProps> = pr
         key: 'subDictionaryType', value: e.target.value
       }])
     }
+  }
+
+  // 点击modal确定按钮触发的回调
+  const doOk = (values: Store) => {
+    console.log('doOk', values)
+    const currentDictionaryType = titleField.find(item => item.key === 'dictionaryType')?.value
+    const currentSubDictionaryType = titleField.find(item => item.key === 'subDictionaryType')?.value
+    // TODO: 发送请求（分为新增和编辑）
+    if (modalType === 'add') { // 新增
+      const promise = request('/addDictionary', {
+        method: 'POST',
+        data: {
+          dictionaryType: currentDictionaryType,
+          subDictionaryType: currentSubDictionaryType,
+          ...values,
+          creator: '顾兰兰' // TODO: 应为当前登录的用户，暂时写死
+        }
+      })
+      promise.then((res) => {
+        if (res.code === '1') { // 操作成功
+          // 刷新当前列表
+          setIsRefresh(!isRefresh)
+          // 隐藏弹出框
+          setModalVisible(false)
+        }
+      })
+    } else { // 编辑
+      const promise = request('/updateDictionary', {
+        'method': 'POST',
+        data: {
+          id: currentDictionaryId.current,
+          ...values
+        }
+      })
+      promise.then((res) => {
+        if (res.code === '1') { // 操作成功
+          // 刷新当前列表
+          setIsRefresh(!isRefresh)
+          // 隐藏弹出框
+          setModalVisible(false)
+        }
+      })
+    }
+  }
+
+  // 点击modal取消按钮触发的回调
+  const doCancel = () => {
+    setModalVisible(false)
   }
 
   // 一级tab面板
@@ -444,18 +258,43 @@ const DictionaryTableMaintenance: React.FC<DictionaryTableMaintenanceProps> = pr
     >{item.label}</Radio.Button>)}
   </Radio.Group>
 
+  // 右上角按钮
+  const extra = <div>
+    <Button
+      type="primary"
+      icon={<PlusCircleFilled />}
+      onClick={onAddDictionary}
+    >新增</Button>
+  </div>
+
   const GlobalTableProps = {
     title,
     dispatchType: 'dictionaryTableMaintenance/fetchDictionaryList',
+    // columns: basicColumns,
     columns,
     dataSource: dictionaryList,
     total,
     subTitle,
     titleField,
     searchPlaceholder,
-    filterFormItems
+    filterFormItems,
+    extra,
+    isRefresh
   }
-  return <GlobalTable {...GlobalTableProps} />
+
+  const AddOrEditModalprops = {
+    visible: modalVisible,
+    modalProps,
+    doOk,
+    doCancel,
+    modalType,
+    getForm
+  }
+
+  return <>
+    <GlobalTable {...GlobalTableProps} />
+    <AddOrEditModal {...AddOrEditModalprops} />
+  </>
 }
 
 export default connect(({ dictionaryTableMaintenance }: {
