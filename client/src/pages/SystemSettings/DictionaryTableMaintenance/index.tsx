@@ -81,7 +81,7 @@ const DictionaryTableMaintenance: React.FC<DictionaryTableMaintenanceProps> = pr
       if (res.code === '1') { // 操作成功
         // 刷新列表
         console.log('onRemoveDictionary-isRefresh', isRefresh)
-        // 注意：此处有一个bug：只能取到初始的isRefresh，原因：列表的列名改变导致
+        // TODO: bug:注意：此处有一个bug：只能取到初始的isRefresh，原因：列表的列名改变导致
         setIsRefresh(!isRefresh)
       }
     })
@@ -179,7 +179,6 @@ const DictionaryTableMaintenance: React.FC<DictionaryTableMaintenanceProps> = pr
     console.log('doOk', values)
     const currentDictionaryType = titleField.find(item => item.key === 'dictionaryType')?.value
     const currentSubDictionaryType = titleField.find(item => item.key === 'subDictionaryType')?.value
-    // TODO: 发送请求（分为新增和编辑）
     if (modalType === 'add') { // 新增
       const promise = request('/addDictionary', {
         method: 'POST',

@@ -31,6 +31,11 @@ export default [
         path: '/system-settings/dictionary-table-maintenance',
         component: 'SystemSettings/DictionaryTableMaintenance',
       },
+      {
+        name: '检查项目设置',
+        path: '/system-settings/check-project-setting',
+        component: 'SystemSettings/CheckProjectSetting',
+      },
     ],
   },
 ];

@@ -276,6 +276,18 @@ const PRESCRIPTION_TYPES = [
   },
 ];
 
+// 状态
+const USE_STATUSES = [
+  {
+    label: '禁用',
+    value: 0,
+  },
+  {
+    label: '启用',
+    value: 1,
+  },
+];
+
 export {
   ADMISSION_STATUSES,
   DEPARTMENTS,
@@ -286,5 +298,6 @@ export {
   PAYMENT_METHODS,
   DICTIONARY_TYPES,
   CHIEF_COMPLAINT_TYPES,
-  PRESCRIPTION_TYPES
+  PRESCRIPTION_TYPES,
+  USE_STATUSES
 };

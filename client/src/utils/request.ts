@@ -76,7 +76,6 @@ const request = extend({
 
 // request拦截器, 改变url 或 options.
 request.interceptors.request.use((url, options) => {
-  // TODO: 处理为无值的参数
   let tempData;
   if (options.method === 'get') {
     tempData = options.params;

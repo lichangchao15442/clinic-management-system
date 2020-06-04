@@ -55,6 +55,8 @@ const GlobalTable: React.FC<GlobalTableProps> = ({
   // useRef
   const filterForm = useRef<FormInstance>() // filterForma的form
 
+  console.log('GlobalTable')
+
   // 获取FilterForm的form
   const getForm = (form: FormInstance) => {
     filterForm.current = form
@@ -62,6 +64,7 @@ const GlobalTable: React.FC<GlobalTableProps> = ({
 
   // 为数据源增加序号
   useEffect(() => {
+    console.log('dataSource')
     const newData = dataSource.map((item: any, index: number) => ({
       ...item,
       key: (pagination.pageNum - 1) * pagination.pageSize + index + 1
@@ -71,20 +74,24 @@ const GlobalTable: React.FC<GlobalTableProps> = ({
 
   // tab面板切换时触发
   useEffect(() => {
+    if (titleField && isRefresh !== undefined) {
+      console.log('titleField, isRefresh')
+      // 面板切换，分页从第一页开始
+      setPagination({
+        ...pagination,
+        pageNum: 1
+      })
+      // 清空query和FilterForm表单
+      setQuery({})
+      filterForm.current && filterForm.current.resetFields()
+    }
     // console.log('isRefresh-GlobalTable', isRefresh)
-    // 面板切换，分页从第一页开始
-    setPagination({
-      ...pagination,
-      pageNum: 1
-    })
-    // 清空query和FilterForm表单
-    setQuery({})
-    filterForm.current && filterForm.current.resetFields()
     // console.log('titleField', titleField)
   }, [titleField, isRefresh])
 
   // 请求数据(查询条件、分页、tab切换改变就重新请求)
   useEffect(() => {
+    console.log('query, pagination')
     if (titleField.length) { // 当存在tab切换面板时
       let newQuery: { [key: string]: any } = _.cloneDeep(query)
       titleField.map(item => {

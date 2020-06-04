@@ -1,14 +1,14 @@
 import request from '@/utils/request';
 
-export async function fetchDictionaryList(params: {
-  pageSize: number;
+export async function fetchCheckProjectList(params: {
   pageNum: number;
+  pageSize: number;
   query: {
-    type?: number;
     search?: string;
+    status?: number;
   };
 }) {
-  return request('/getDictionaryList', {
+  return request('/getCheckProjectList', {
     method: 'GET',
     params,
   });
