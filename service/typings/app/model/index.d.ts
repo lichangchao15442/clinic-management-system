@@ -2,12 +2,14 @@
 // Do not modify this file!!!!!!!!!
 
 import 'egg';
+import ExportCheckProjects from '../../../app/model/checkProjects';
 import ExportDictionary from '../../../app/model/dictionary';
 import ExportOrders from '../../../app/model/orders';
 import ExportPatients from '../../../app/model/patients';
 
 declare module 'egg' {
   interface IModel {
+    CheckProjects: ReturnType<typeof ExportCheckProjects>;
     Dictionary: ReturnType<typeof ExportDictionary>;
     Orders: ReturnType<typeof ExportOrders>;
     Patients: ReturnType<typeof ExportPatients>;
