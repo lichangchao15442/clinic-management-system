@@ -1,0 +1,49 @@
+.titleIcon {
+  width: 6px;
+  height: 19px;
+  display: inline-block;
+  background: @primary-color;
+  margin-right: 6px;
+  margin-bottom: -3px;
+}
+
+.titleText {
+  font-size: 18px;
+}
+
+.titleInfo {
+  font-size: 24px;
+  font-weight: 700;
+  color: @primary-color;
+}
+
+.compactSelect {
+  display: inline-block;
+  width: 80%;
+  margin-right: 10%;
+}
+
+.compactButton {
+  display: inline-block;
+  width: 10%;
+  font-size: 20px;
+  color: @primary-color;
+}
+
+.popconfirm {
+  :global {
+    .ant-popover-message-title {
+      padding-left: unset;
+    }
+    .ant-popover-buttons {
+      display: flex;
+      justify-content: space-between;
+      // text-align: center;
+      button {
+        margin-left: unset;
+        width: 80px;
+        border-radius: 4px;
+      }
+    }
+  }
+}

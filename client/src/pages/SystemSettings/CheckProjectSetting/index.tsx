@@ -1,5 +1,5 @@
 import React from 'react'
-import { connect } from 'umi'
+import { connect, history } from 'umi'
 import moment from 'moment'
 import { Button, Select } from 'antd'
 import { PlusCircleFilled, DownloadOutlined, ExportOutlined } from '@ant-design/icons'
@@ -92,7 +92,11 @@ const CheckProjectSetting: React.FC<CheckProjectSettingProps> = props => {
 
   // 右上角的按钮组
   const extra = <div>
-    <Button type="primary" icon={<PlusCircleFilled />}>新增项目</Button>
+    <Button
+      type="primary"
+      icon={<PlusCircleFilled />}
+      onClick={() => { history.push('/system-settings/check-project-setting/add') }}
+    >新增项目</Button>
     <Button ghost type="primary" icon={<DownloadOutlined />} style={{ marginLeft: 20 }}>导入</Button>
     <Button ghost type="primary" icon={<ExportOutlined />} style={{ marginLeft: 20 }}>导出</Button>
   </div>

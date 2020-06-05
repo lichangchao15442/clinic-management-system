@@ -13,3 +13,15 @@ export async function fetchCheckProjectList(params: {
     params,
   });
 }
+
+export async function fetchUnitList() {
+  return request('/getUnitList');
+}
+
+export async function fetchProjectTypeList() {
+  return request('/getProjectTypeList');
+}
+
+export async function fetchInvoiceItemList() {
+  return request('/getInvoiceItemList');
+}

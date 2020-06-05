@@ -18,4 +18,7 @@ export interface CheckProjectType {
 export interface CheckProjectSettingStateType {
   checkProjectList: CheckProjectType[];
   total: number;
+  unitList: string[];
+  projectTypeList: string[];
+  invoiceItemList: string[];
 }

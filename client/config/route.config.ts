@@ -34,7 +34,21 @@ export default [
       {
         name: '检查项目设置',
         path: '/system-settings/check-project-setting',
-        component: 'SystemSettings/CheckProjectSetting',
+        menu: {
+          hideChildren: true,
+        },
+        routes: [
+          {
+            name: '检查项目设置',
+            path: '/system-settings/check-project-setting',
+            component: 'SystemSettings/CheckProjectSetting',
+          },
+          {
+            name: '检查项目设置',
+            path: '/system-settings/check-project-setting/add',
+            component:'SystemSettings/CheckProjectSetting/components/AddOrEditCheckProject'
+          },
+        ],
       },
     ],
   },
