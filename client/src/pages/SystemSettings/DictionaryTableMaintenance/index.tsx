@@ -201,6 +201,8 @@ const DictionaryTableMaintenance: React.FC<DictionaryTableMaintenanceProps> = pr
       const promise = request('/updateDictionary', {
         'method': 'POST',
         data: {
+          dictionaryType: currentDictionaryType,
+          subDictionaryType: currentSubDictionaryType,
           id: currentDictionaryId.current,
           ...values
         }

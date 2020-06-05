@@ -8,6 +8,7 @@ const  toInt = (str) => {
   return parseInt(str, 10) || 0;
 }
 
+
 // 判断某个属性是否有值（为undefined、null、‘’)
 const hasValue = (value) => {
   let isEmpty
@@ -29,6 +30,8 @@ const hasValue = (value) => {
 }
 
 class OrdersController extends Controller {
+
+  // 查询字典表数据
   async index() {
     const ctx = this.ctx;
     console.log('ctx.query', ctx.query)
@@ -87,11 +90,26 @@ class OrdersController extends Controller {
     ctx.body = await ctx.model.User.findByPk(toInt(ctx.params.id));
   }
 
+  // 创建字典表数据
   async create() {
     const ctx = this.ctx;
     const data = {
       ...ctx.request.body,
       createdTime:new Date()
+    }
+    // 名字去重
+    const { name, dictionaryType, subDictionaryType } = ctx.request.body
+    const where = {dictionaryType,subDictionaryType}
+    const datas = await ctx.model.Dictionary.findAll({where})
+    const allNames = datas.map(item => item.name)
+    const isExtied = allNames.find(item => item === name)
+    if (isExtied) {
+      ctx.status = 200;
+      ctx.body = {
+        code: '0',
+        msg:'名字已存在'
+      }
+      return;
     }
     await ctx.model.Dictionary.create(data);
     ctx.status = 201;
@@ -101,6 +119,7 @@ class OrdersController extends Controller {
     };
   }
 
+  // 编辑字典表数据
   async update() {
     const ctx = this.ctx;
     const id = toInt(ctx.request.body.id);
@@ -113,8 +132,21 @@ class OrdersController extends Controller {
       }
       return;
     }
+    // 名字去重
+    const { name, dictionaryType, subDictionaryType,type } = ctx.request.body
+    const where = {dictionaryType,subDictionaryType}
+    const datas = await ctx.model.Dictionary.findAll({where})
+    const allNames = datas.map(item => item.name)
+    const isExtied = allNames.find(item => item === name)
+    if (isExtied) {
+      ctx.status = 200;
+      ctx.body = {
+        code: '0',
+        msg:'名字已存在'
+      }
+      return;
+    }
 
-    const { name, type } = ctx.request.body;
     let updateData:{[key:string]:any} = { name }
     if (hasValue(type)) {
       updateData = {name,type}
@@ -126,6 +158,7 @@ class OrdersController extends Controller {
     };
   }
 
+  // 删除字典表数据
   async destroy() {
     const ctx = this.ctx;
     const id = toInt(ctx.request.body.id);
@@ -145,6 +178,60 @@ class OrdersController extends Controller {
       code: '1',
       msg:'操作成功'
     }
+  }
+
+  // 查询项目单位列表
+  async getUnitList() {
+    const ctx = this.ctx;
+    const unitList = await ctx.model.Dictionary.findAll({
+      where: {
+        dictionaryType: 3,
+        subDictionaryType:2
+      }
+    });
+    const data = unitList.map(item => item.name)
+    ctx.status = 200;
+    ctx.body = {
+      code: '1',
+      data
+    }
+    
+  }
+
+  // 查询项目分类列表
+  async getProjectTypeList() {
+    const ctx = this.ctx;
+    const projectTypeList = await ctx.model.Dictionary.findAll({
+      where: {
+        dictionaryType: 3,
+        subDictionaryType:1
+      }
+    });
+    const data = projectTypeList.map(item => item.name)
+    ctx.status = 200;
+    ctx.body = {
+      code: '1',
+      data
+    }
+    
+  }
+
+  // 查询发票项目列表
+  async getInvoiceItemList() {
+    const ctx = this.ctx;
+    const invoiceItemList = await ctx.model.Dictionary.findAll({
+      where: {
+        dictionaryType: 2,
+        subDictionaryType:4
+      }
+    });
+    const data = invoiceItemList.map(item => item.name)
+    ctx.status = 200;
+    ctx.body = {
+      code: '1',
+      data
+    }
+    
   }
 }
 
