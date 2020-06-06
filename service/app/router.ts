@@ -24,4 +24,5 @@ export default (app: Application) => {
   router.post('/addSupplier', controller.suppliers.create); // 新增供应商
   router.get('/getSupplierDetail', controller.suppliers.getSupplierDetail); // 获取供应商详情
   router.post('/editSupplier', controller.suppliers.update); // 编辑供应商详情
+  router.delete('/deleteSupplier', controller.suppliers.destroy); // 删除某条供应商
 };

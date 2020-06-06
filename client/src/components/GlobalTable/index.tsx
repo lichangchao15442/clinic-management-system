@@ -74,8 +74,8 @@ const GlobalTable: React.FC<GlobalTableProps> = ({
 
   // tab面板切换时触发
   useEffect(() => {
-    if (titleField && isRefresh !== undefined) {
-      console.log('titleField, isRefresh')
+    if (titleField.length) {
+      console.log('titleField')
       // 面板切换，分页从第一页开始
       setPagination({
         ...pagination,
@@ -85,9 +85,22 @@ const GlobalTable: React.FC<GlobalTableProps> = ({
       setQuery({})
       filterForm.current && filterForm.current.resetFields()
     }
-    // console.log('isRefresh-GlobalTable', isRefresh)
-    // console.log('titleField', titleField)
-  }, [titleField, isRefresh])
+  }, [titleField])
+
+  // 刷新
+  useEffect(() => {
+    if (isRefresh !== undefined) {
+      console.log('isRefresh')
+      // 刷新切换，分页从第一页开始
+      setPagination({
+        ...pagination,
+        pageNum: 1
+      })
+      // 清空query和FilterForm表单
+      setQuery({})
+      filterForm.current && filterForm.current.resetFields()
+    }
+  }, [isRefresh])
 
   // 请求数据(查询条件、分页、tab切换改变就重新请求)
   useEffect(() => {

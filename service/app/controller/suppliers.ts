@@ -141,17 +141,26 @@ class SuppliersController extends Controller {
     };
   }
 
+  // 删除某个供应商
   async destroy() {
     const ctx = this.ctx;
-    const id = toInt(ctx.params.id);
-    const user = await ctx.model.User.findByPk(id);
-    if (!user) {
-      ctx.status = 404;
+    const id = toInt(ctx.request.body.id);
+    const supplier = await ctx.model.Suppliers.findByPk(id);
+    if (!supplier) {
+      ctx.status = 200;
+      ctx.body = {
+        code: '0',
+        msg: '该供应商不存在'
+      }
       return;
     }
 
-    await user.destroy();
+    await supplier.destroy();
     ctx.status = 200;
+    ctx.body = {
+      code: '1',
+      msg: '操作成功'
+    }
   }
 }
 
