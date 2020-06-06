@@ -46,12 +46,34 @@ export default [
           {
             name: '检查项目设置',
             path: '/system-settings/check-project-setting/add',
-            component:'SystemSettings/CheckProjectSetting/components/AddOrEditCheckProject'
+            component:
+              'SystemSettings/CheckProjectSetting/components/AddOrEditCheckProject',
           },
           {
             name: '检查项目设置',
             path: '/system-settings/check-project-setting/edit',
-            component:'SystemSettings/CheckProjectSetting/components/AddOrEditCheckProject'
+            component:
+              'SystemSettings/CheckProjectSetting/components/AddOrEditCheckProject',
+          },
+        ],
+      },
+      {
+        name: '供应商管理',
+        path: '/system-settings/supplier-management',
+        menu: {
+          hideChildren: true,
+        },
+        routes: [
+          {
+            name: '供应商管理',
+            path: '/system-settings/supplier-management',
+            component: 'SystemSettings/SupplierManagement',
+          },
+          {
+            name: '供应商管理',
+            path: '/system-settings/supplier-management/add',
+            component:
+              'SystemSettings/SupplierManagement/components/AddOrEditSupplier',
           },
         ],
       },

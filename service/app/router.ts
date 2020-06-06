@@ -19,4 +19,7 @@ export default (app: Application) => {
   router.post('/addCheckProject', controller.checkProjects.create); // 新增检查项目
   router.get('/getCheckProjectDetail', controller.checkProjects.getCheckProjectDetail); // 获取检查项目详情
   router.post('/editCheckProject', controller.checkProjects.update); // 编辑检查项目
+  router.get('/getSupplierList', controller.suppliers.index); // 获取供应商列表
+  router.get('/getSupplierNumber', controller.suppliers.getSupplierNumber); // 获取最新的供应商编号
+  router.post('/addSupplier', controller.suppliers.create); // 新增供应商
 };

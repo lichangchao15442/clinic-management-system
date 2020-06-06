@@ -149,9 +149,9 @@ const AddOrEditCheckProject: React.FC<AddOrEditCheckProjectProps> = props => {
   >
     <Card
       className="card-no-border"
-      title={<div>
-        <span className={styles.titleIcon}></span>
-        <span className={styles.titleText}>新增项目</span>
+      title={<div className="title-icon-text">
+        <span></span>
+        <span>{`${operationType === 'add' ? '新增' : '编辑'}项目`}</span>
       </div>}
       extra={<div>
         <Button type="primary" icon={<SaveFilled />} htmlType="submit">保存</Button>

@@ -6,6 +6,7 @@ import ExportCheckProjects from '../../../app/model/checkProjects';
 import ExportDictionary from '../../../app/model/dictionary';
 import ExportOrders from '../../../app/model/orders';
 import ExportPatients from '../../../app/model/patients';
+import ExportSuppliers from '../../../app/model/suppliers';
 
 declare module 'egg' {
   interface IModel {
@@ -13,5 +14,6 @@ declare module 'egg' {
     Dictionary: ReturnType<typeof ExportDictionary>;
     Orders: ReturnType<typeof ExportOrders>;
     Patients: ReturnType<typeof ExportPatients>;
+    Suppliers: ReturnType<typeof ExportSuppliers>;
   }
 }

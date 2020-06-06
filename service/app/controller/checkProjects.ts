@@ -78,7 +78,7 @@ class PatientsController extends Controller {
     ctx.status = 200;
     ctx.body = {
       code: '1',
-      data:allData[0].number+1
+      data:allData.length ?allData[0].number+1:10000
     };
   }
 

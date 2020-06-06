@@ -7,6 +7,7 @@ import ExportDictionary from '../../../app/controller/dictionary';
 import ExportHome from '../../../app/controller/home';
 import ExportOrders from '../../../app/controller/orders';
 import ExportPatients from '../../../app/controller/patients';
+import ExportSuppliers from '../../../app/controller/suppliers';
 
 declare module 'egg' {
   interface IController {
@@ -15,5 +16,6 @@ declare module 'egg' {
     home: ExportHome;
     orders: ExportOrders;
     patients: ExportPatients;
+    suppliers: ExportSuppliers;
   }
 }

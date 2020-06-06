@@ -20,8 +20,8 @@ interface GlobalTableProps {
       [key: string]: boolean;
     }
   };
-  filterFormItems: FilterFormItemType[]; //查询条件列表
   searchPlaceholder: string; //搜索框的placeholder
+  filterFormItems?: FilterFormItemType[]; //查询条件列表
   extra?: ReactNode; // GlobalTable的右上角（一般为按钮组件）
   title?: ReactNode; // GlobalTable的左上角（一般为按钮组/tab组件）
   subTitle?: ReactNode; // 二级tab面板

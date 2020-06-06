@@ -67,7 +67,7 @@ const columns = [
     title: '操作',
     render: (record: CheckProjectType) => <div style={{ width: 100 }} className="table-operate">
       <Button type="link" onClick={() => { history.push(`/system-settings/check-project-setting/edit?id=${record.id}`) }}>编辑</Button>
-      <Button type="link">停用</Button>
+      <Button type="link" onClick={() => { alert('暂未开发') }}>停用</Button>
     </div>
   }
 ]
