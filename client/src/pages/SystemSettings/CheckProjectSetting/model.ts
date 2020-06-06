@@ -1,4 +1,5 @@
 import { Effect, Reducer, Subscription } from 'umi';
+import { parse } from 'qs';
 
 import { CheckProjectSettingStateType } from './data.d';
 import {
@@ -7,6 +8,7 @@ import {
   fetchProjectTypeList,
   fetchInvoiceItemList,
   fetchProjectNumber,
+  fetchCheckProjectDetail,
 } from './service';
 
 interface CheckProjectSettingModelType {
@@ -18,6 +20,7 @@ interface CheckProjectSettingModelType {
     fetchProjectTypeList: Effect;
     fetchInvoiceItemList: Effect;
     fetchProjectNumber: Effect;
+    fetchCheckProjectDetail: Effect;
   };
   reducers: {
     save: Reducer;
@@ -37,6 +40,8 @@ const CheckProjectSettingModel: CheckProjectSettingModelType = {
     projectTypeList: [],
     invoiceItemList: [],
     initProjectNumber: null,
+    operationType: 'add',
+    checkProjectDetail:null
   },
 
   effects: {
@@ -100,6 +105,18 @@ const CheckProjectSettingModel: CheckProjectSettingModelType = {
         });
       }
     },
+    // 获取检查项目详情
+    *fetchCheckProjectDetail({ payload }, { call, put }) {
+      const response = yield call(fetchCheckProjectDetail, payload);
+      if (response.code === '1') {
+        yield put({
+          type: 'save',
+          payload: {
+            checkProjectDetail: response.data,
+          },
+        });
+      }
+    },
   },
 
   reducers: {
@@ -113,8 +130,11 @@ const CheckProjectSettingModel: CheckProjectSettingModelType = {
 
   subscriptions: {
     setup({ history, dispatch }) {
-      history.listen(({ pathname }) => {
-        if (pathname === '/system-settings/check-project-setting/add') {
+      history.listen(({ pathname, search }) => {
+        if (
+          pathname === '/system-settings/check-project-setting/add' ||
+          pathname === '/system-settings/check-project-setting/edit'
+        ) {
           // 获取下拉框的动态数据
           dispatch({
             type: 'fetchUnitList',
@@ -126,9 +146,31 @@ const CheckProjectSettingModel: CheckProjectSettingModelType = {
             type: 'fetchInvoiceItemList',
           });
 
-          // 获取自动生成的项目编号
+          // 根据路由判断当前页面是新增还是编辑
+          let operationType = 'add';
+          if (pathname === '/system-settings/check-project-setting/add') {
+            operationType = 'add';
+            // 获取自动生成的项目编号
+            dispatch({
+              type: 'fetchProjectNumber',
+            });
+          } else if (
+            pathname === '/system-settings/check-project-setting/edit'
+          ) {
+            operationType = 'edit';
+            const query = parse(search.split('?')[1]);
+            console.log('query', query);
+            // 获取检查项目详情
+            dispatch({
+              type: 'fetchCheckProjectDetail',
+              payload: {
+                id: query.id,
+              },
+            });
+          }
           dispatch({
-            type: 'fetchProjectNumber',
+            type: 'save',
+            payload: { operationType },
           });
         }
       });

@@ -17,4 +17,6 @@ export default (app: Application) => {
   router.get('/getProjectNumber', controller.checkProjects.getProjectNumber); // 获取发票项目编码
   router.get('/isCheckProjectNameExited', controller.checkProjects.isCheckProjectNameExited); // 检查项目名是否已存在
   router.post('/addCheckProject', controller.checkProjects.create); // 新增检查项目
+  router.get('/getCheckProjectDetail', controller.checkProjects.getCheckProjectDetail); // 获取检查项目详情
+  router.post('/editCheckProject', controller.checkProjects.update); // 编辑检查项目
 };

@@ -29,3 +29,10 @@ export async function fetchInvoiceItemList() {
 export async function fetchProjectNumber() {
   return request('/getProjectNumber');
 }
+
+export async function fetchCheckProjectDetail(params: { id: number }) {
+  return request('/getCheckProjectDetail', {
+    method: 'GET',
+    params,
+  });
+}

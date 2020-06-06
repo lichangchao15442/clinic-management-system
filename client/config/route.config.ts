@@ -48,6 +48,11 @@ export default [
             path: '/system-settings/check-project-setting/add',
             component:'SystemSettings/CheckProjectSetting/components/AddOrEditCheckProject'
           },
+          {
+            name: '检查项目设置',
+            path: '/system-settings/check-project-setting/edit',
+            component:'SystemSettings/CheckProjectSetting/components/AddOrEditCheckProject'
+          },
         ],
       },
     ],

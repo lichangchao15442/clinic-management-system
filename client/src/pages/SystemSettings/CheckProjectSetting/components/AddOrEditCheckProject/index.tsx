@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent, useRef, useEffect } from 'react'
-import { Card, Button, Form, Input, Row, Col, Select, Radio, Popconfirm } from 'antd'
+import { Card, Button, Form, Input, Row, Col, Select, Radio, Popconfirm, message } from 'antd'
 import { SaveFilled, CaretLeftOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import { connect, history } from 'umi'
 import { Store } from 'rc-field-form/lib/interface'
@@ -17,14 +17,29 @@ const colProps = {
 const { Option } = Select
 
 interface AddOrEditCheckProjectProps {
-  checkProjectSetting: CheckProjectSettingStateType
+  checkProjectSetting: CheckProjectSettingStateType;
+  location: {
+    query: {
+      [key: string]: any
+    }
+  }
 }
 
 const AddOrEditCheckProject: React.FC<AddOrEditCheckProjectProps> = props => {
   const [form] = Form.useForm()
   const { setFieldsValue } = form
   // props
-  const { checkProjectSetting: { unitList, projectTypeList, invoiceItemList, initProjectNumber } } = props
+  const {
+    checkProjectSetting: {
+      unitList,
+      projectTypeList,
+      invoiceItemList,
+      initProjectNumber,
+      operationType,
+      checkProjectDetail = {}
+    },
+    location: { query = {} }
+  } = props
 
   // useState
   const [content, setContent] = useState('') // 自定义的内容（单位、项目分类、发票项目）
@@ -53,10 +68,19 @@ const AddOrEditCheckProject: React.FC<AddOrEditCheckProjectProps> = props => {
 
   // 给新增检查项目表单赋项目编号
   useEffect(() => {
-    setFieldsValue({
-      number: initProjectNumber
-    })
-  }, [initProjectNumber])
+    if (operationType === 'add') {
+      setFieldsValue({
+        number: initProjectNumber
+      })
+    }
+  }, [initProjectNumber, operationType])
+
+  // 为编辑时，数据回显
+  useEffect(() => {
+    if (operationType === 'edit') {
+      checkProjectDetail && setFieldsValue(checkProjectDetail)
+    }
+  }, [checkProjectDetail, operationType])
 
   // 自定义内容的input值改变的回调
   const onContentChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -89,12 +113,25 @@ const AddOrEditCheckProject: React.FC<AddOrEditCheckProjectProps> = props => {
   // 提交表单且数据验证成功后回调事件
   const onFinish = (values: Store) => {
     // console.log('onFinish', values)
-    const promise = request('/addCheckProject', {
-      method: 'POST',
-      data: values
-    })
-    promise.then((res) => {
+    let promise
+    if (operationType === 'add') {
+      promise = request('/addCheckProject', {
+        method: 'POST',
+        data: values
+      })
+    } else if (operationType === 'edit') {
+      promise = request('/editCheckProject', {
+        method: 'POST',
+        data: {
+          id: query.id,
+          ...values
+        }
+      })
+    }
+
+    promise && promise.then((res) => {
       if (res.code === '1') {
+        message.success('操作成功')
         // 返回列表页面
         history.push('/system-settings/check-project-setting')
       }
@@ -150,7 +187,10 @@ const AddOrEditCheckProject: React.FC<AddOrEditCheckProjectProps> = props => {
                   // 项目名去重校验
                   const promise = request('/isCheckProjectNameExited', {
                     method: 'GET',
-                    params: { name: value }
+                    params: {
+                      name: value,
+                      id: query.id
+                    }
                   })
                   return promise.then((res) => {
                     if (res.code === '1') {
