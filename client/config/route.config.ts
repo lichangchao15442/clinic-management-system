@@ -75,6 +75,12 @@ export default [
             component:
               'SystemSettings/SupplierManagement/components/AddOrEditSupplier',
           },
+          {
+            name: '供应商管理',
+            path: '/system-settings/supplier-management/edit',
+            component:
+              'SystemSettings/SupplierManagement/components/AddOrEditSupplier',
+          },
         ],
       },
     ],

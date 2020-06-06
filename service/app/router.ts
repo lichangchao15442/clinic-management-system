@@ -22,4 +22,6 @@ export default (app: Application) => {
   router.get('/getSupplierList', controller.suppliers.index); // 获取供应商列表
   router.get('/getSupplierNumber', controller.suppliers.getSupplierNumber); // 获取最新的供应商编号
   router.post('/addSupplier', controller.suppliers.create); // 新增供应商
+  router.get('/getSupplierDetail', controller.suppliers.getSupplierDetail); // 获取供应商详情
+  router.post('/editSupplier', controller.suppliers.update); // 编辑供应商详情
 };

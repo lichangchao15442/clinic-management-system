@@ -54,7 +54,7 @@ const columns = [
   {
     title: '操作',
     render: (record: SupplierType) => <div style={{ width: 100 }} className="table-operate">
-      <Button type="link">编辑</Button>
+      <Button type="link" onClick={() => { history.push(`/system-settings/supplier-management/edit?id=${record.id}`) }}>编辑</Button>
       <Button type="link">删除</Button>
     </div>
   }

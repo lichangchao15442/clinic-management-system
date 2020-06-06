@@ -79,11 +79,32 @@ class SuppliersController extends Controller {
     }
   }
 
+  // 获取供应商详情
+  async getSupplierDetail() {
+    const ctx = this.ctx
+    const id = toInt(ctx.query.id)
+    const supplier = await ctx.model.Suppliers.findByPk(id)
+    if (!supplier) {
+      ctx.status = 200
+      ctx.body = {
+        code: '0',
+        msg: '该供应商不存在'
+      }
+      return;
+    }
+    ctx.status = 200
+    ctx.body = {
+      code: '1',
+      data: supplier
+    }
+  }
+
   // async show() {
   //   const ctx = this.ctx;
   //   ctx.body = await ctx.model.User.findByPk(toInt(ctx.params.id));
   // }
 
+  // 新增供应商
   async create() {
     const ctx = this.ctx;
     const data = {
@@ -98,18 +119,26 @@ class SuppliersController extends Controller {
     };
   }
 
+  // 编辑供应商
   async update() {
     const ctx = this.ctx;
-    const id = toInt(ctx.params.id);
-    const user = await ctx.model.User.findByPk(id);
-    if (!user) {
-      ctx.status = 404;
+    const {id:supplierId,...others } = ctx.request.body;
+    const id = toInt(supplierId);
+    const supplier = await ctx.model.Suppliers.findByPk(id);
+    if (!supplier) {
+      ctx.status = 200;
+      ctx.body = {
+        code: '0',
+        msg: '该供应商不存在'
+      }
       return;
     }
 
-    const { name, age } = ctx.request.body;
-    await user.update({ name, age });
-    ctx.body = user;
+    await supplier.update(others);
+    ctx.body = {
+      code: '1',
+      msg: '操作成功'
+    };
   }
 
   async destroy() {

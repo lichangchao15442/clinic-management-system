@@ -16,7 +16,12 @@ const colProps = {
 }
 
 interface AddOrEditSupplierProps {
-  supplierManagement: SupplierManagementState
+  supplierManagement: SupplierManagementState;
+  location: {
+    query: {
+      [key: string]: any
+    }
+  }
 }
 
 const AddOrEditSupplier: React.FC<AddOrEditSupplierProps> = props => {
@@ -24,12 +29,20 @@ const AddOrEditSupplier: React.FC<AddOrEditSupplierProps> = props => {
   const { setFieldsValue } = form
 
   // props
-  const { supplierManagement: { supplierNumber, operationType } } = props
+  const {
+    supplierManagement: { supplierNumber, operationType, supplierDetail },
+    location: { query = {} }
+  } = props
 
   // 新增时，为供应商编号表单自动项填充值
   useEffect(() => {
-    setFieldsValue({ number: supplierNumber })
+    operationType === 'add' && setFieldsValue({ number: supplierNumber })
   }, [supplierNumber, operationType])
+
+  // 编辑时，表单数据回显
+  useEffect(() => {
+    operationType === 'edit' && setFieldsValue(supplierDetail)
+  }, [supplierDetail, operationType])
 
   // 提交表单且数据验证成功后回调事件
   const onFinish = (values: Store) => {
@@ -39,7 +52,16 @@ const AddOrEditSupplier: React.FC<AddOrEditSupplierProps> = props => {
         method: 'POST',
         data: {
           ...values,
-          creator: '顾兰兰' // TODO: 因为当前登录人员，暂且写死
+          creator: '顾兰兰' // TODO: 应为当前登录人员，暂且写死
+        }
+      })
+    } else if (operationType === 'edit') {
+      promise = request('/editSupplier', {
+        method: 'POST',
+        data: {
+          id: query.id,
+          ...values,
+          creator: '顾兰兰' // TODO: 应为当前登录人员，暂且写死
         }
       })
     }

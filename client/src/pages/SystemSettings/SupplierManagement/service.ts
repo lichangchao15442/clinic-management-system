@@ -16,3 +16,10 @@ export async function fetchSupplierList(params: {
 export async function fetchSupplierNumber() {
   return request('/getSupplierNumber');
 }
+
+export async function fetchSupplierDetail(params: { id: number }) {
+  return request('/getSupplierDetail', {
+    method: 'GET',
+    params,
+  });
+}

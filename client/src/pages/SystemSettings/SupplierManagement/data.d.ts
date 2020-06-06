@@ -16,4 +16,5 @@ export interface SupplierManagementState {
   total: number;
   supplierNumber: number | null; // 新增供应商时自动填充的供应商编码
   operationType: 'add' | 'edit'; // 新增/编辑供应商共用页面的当前操作类型
+  supplierDetail: SupplierType | {};
 }
