@@ -25,3 +25,7 @@ export async function fetchProjectTypeList() {
 export async function fetchInvoiceItemList() {
   return request('/getInvoiceItemList');
 }
+
+export async function fetchProjectNumber() {
+  return request('/getProjectNumber');
+}

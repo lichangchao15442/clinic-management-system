@@ -69,17 +69,49 @@ class PatientsController extends Controller {
     }
   }
 
-  async show() {
-    const ctx = this.ctx;
-    ctx.body = await ctx.model.User.findByPk(toInt(ctx.params.id));
+  // 获取项目编码
+  async getProjectNumber() { 
+    const ctx = this.ctx
+    const allData = await ctx.model.CheckProjects.findAll({
+      order:[['number','DESC']],
+    });
+    ctx.status = 200;
+    ctx.body = {
+      code: '1',
+      data:allData[0].number+1
+    };
   }
+
+  // 检查项目名是否已存在
+  async isCheckProjectNameExited() {
+    const ctx = this.ctx
+    const {name} = ctx.query
+    const allData = await ctx.model.CheckProjects.findAll()
+    const isExited = allData.find(item => item.name === name)
+    ctx.status = 200;
+    ctx.body = {
+      code: '1',
+      data:Boolean(isExited)
+    };
+  }
+  
+  // async show() {
+  //   const ctx = this.ctx;
+  //   ctx.body = await ctx.model.User.findByPk(toInt(ctx.params.id));
+  // }
 
   async create() {
     const ctx = this.ctx;
-    const { name, age } = ctx.request.body;
-    const user = await ctx.model.User.create({ name, age });
+    const data = {
+      ...ctx.request.body,
+      createdTime: new Date()
+    }
+    await ctx.model.CheckProjects.create(data);
     ctx.status = 201;
-    ctx.body = user;
+    ctx.body = {
+      code: '1',
+      msg:'操作成功'
+    };
   }
 
   async update() {

@@ -21,4 +21,5 @@ export interface CheckProjectSettingStateType {
   unitList: string[];
   projectTypeList: string[];
   invoiceItemList: string[];
+  initProjectNumber: number | null;
 }

@@ -1,11 +1,13 @@
-import React, { useState, ChangeEvent, useRef } from 'react'
+import React, { useState, ChangeEvent, useRef, useEffect } from 'react'
 import { Card, Button, Form, Input, Row, Col, Select, Radio, Popconfirm } from 'antd'
 import { SaveFilled, CaretLeftOutlined, PlusCircleOutlined } from '@ant-design/icons'
-import { connect } from 'umi'
+import { connect, history } from 'umi'
+import { Store } from 'rc-field-form/lib/interface'
 
 import { USE_STATUSES } from '@/utils/dataDictionary'
-import styles from './index.less'
+import request from '@/utils/request'
 import { CheckProjectSettingStateType } from '../../data'
+import styles from './index.less'
 
 const colProps = {
   xs: 24,
@@ -22,7 +24,7 @@ const AddOrEditCheckProject: React.FC<AddOrEditCheckProjectProps> = props => {
   const [form] = Form.useForm()
   const { setFieldsValue } = form
   // props
-  const { checkProjectSetting: { unitList, projectTypeList, invoiceItemList } } = props
+  const { checkProjectSetting: { unitList, projectTypeList, invoiceItemList, initProjectNumber } } = props
 
   // useState
   const [content, setContent] = useState('') // 自定义的内容（单位、项目分类、发票项目）
@@ -48,6 +50,13 @@ const AddOrEditCheckProject: React.FC<AddOrEditCheckProjectProps> = props => {
       options: invoiceItemList,
     },
   ]
+
+  // 给新增检查项目表单赋项目编号
+  useEffect(() => {
+    setFieldsValue({
+      number: initProjectNumber
+    })
+  }, [initProjectNumber])
 
   // 自定义内容的input值改变的回调
   const onContentChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -77,39 +86,84 @@ const AddOrEditCheckProject: React.FC<AddOrEditCheckProjectProps> = props => {
     setContent('')
   }
 
-  return <Card
-    className="card-no-border"
-    title={<div>
-      <span className={styles.titleIcon}></span>
-      <span className={styles.titleText}>新增项目</span>
-    </div>}
-    extra={<div>
-      <Button type="primary" icon={<SaveFilled />}>保存</Button>
-      <Button
-        ghost
-        type="primary"
-        icon={<CaretLeftOutlined />}
-        style={{ marginLeft: 20 }}
-      >返回</Button>
-    </div>}
+  // 提交表单且数据验证成功后回调事件
+  const onFinish = (values: Store) => {
+    // console.log('onFinish', values)
+    const promise = request('/addCheckProject', {
+      method: 'POST',
+      data: values
+    })
+    promise.then((res) => {
+      if (res.code === '1') {
+        // 返回列表页面
+        history.push('/system-settings/check-project-setting')
+      }
+    })
+  }
+
+  return <Form
+    form={form}
+    layout="vertical"
+    initialValues={{
+      isAllowMemberDiscount: true,
+      status: USE_STATUSES[0].value,
+    }}
+    onFinish={onFinish}
   >
-    <div className={styles.titleInfo}>项目信息</div>
-    <Form
-      form={form}
-      layout="vertical"
-      initialValues={{
-        isAllowMemberDiscount: true,
-        status: USE_STATUSES[0].value
-      }}
+    <Card
+      className="card-no-border"
+      title={<div>
+        <span className={styles.titleIcon}></span>
+        <span className={styles.titleText}>新增项目</span>
+      </div>}
+      extra={<div>
+        <Button type="primary" icon={<SaveFilled />} htmlType="submit">保存</Button>
+        <Button
+          ghost
+          type="primary"
+          icon={<CaretLeftOutlined />}
+          style={{ marginLeft: 20 }}
+          onClick={() => { history.goBack() }}
+        >返回</Button>
+      </div>}
     >
+      <div className={styles.titleInfo}>项目信息</div>
+
       <Row gutter={24}>
         <Col {...colProps}>
-          <Form.Item label="项目编码" name="number">
+          <Form.Item label="项目编码" name="number" >
             <Input disabled />
           </Form.Item>
         </Col>
         <Col {...colProps}>
-          <Form.Item label="项目名称" name="name">
+          <Form.Item
+            label="项目名称"
+            name="name"
+            required={true}
+            validateTrigger="onBlur"
+            rules={[
+              () => ({
+                validator(rule, value) {
+                  if (!value || value.trim() === '') {
+                    return Promise.reject('请输入项目名称')
+                  }
+                  // 项目名去重校验
+                  const promise = request('/isCheckProjectNameExited', {
+                    method: 'GET',
+                    params: { name: value }
+                  })
+                  return promise.then((res) => {
+                    if (res.code === '1') {
+                      if (res.data) { // 项目名重复
+                        return Promise.reject('该项目名称已存在！')
+                      }
+                      return Promise.resolve()
+                    }
+                  })
+                },
+              }),
+            ]}
+          >
             <Input />
           </Form.Item>
         </Col>
@@ -186,8 +240,8 @@ const AddOrEditCheckProject: React.FC<AddOrEditCheckProjectProps> = props => {
           </Form.Item>
         </Col>
       </Row>
-    </Form>
-  </Card>
+    </Card>
+  </Form>
 }
 
 export default connect(({ checkProjectSetting }: {
