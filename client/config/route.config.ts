@@ -32,6 +32,11 @@ export default [
         component: 'SystemSettings/DictionaryTableMaintenance',
       },
       {
+        name: '员工管理',
+        path: '/system-settings/employee-management',
+        component:'SystemSettings/EmployeeManagement'
+      },
+      {
         name: '检查项目设置',
         path: '/system-settings/check-project-setting',
         menu: {

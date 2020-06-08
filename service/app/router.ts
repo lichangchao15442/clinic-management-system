@@ -25,4 +25,8 @@ export default (app: Application) => {
   router.get('/getSupplierDetail', controller.suppliers.getSupplierDetail); // 获取供应商详情
   router.post('/editSupplier', controller.suppliers.update); // 编辑供应商详情
   router.delete('/deleteSupplier', controller.suppliers.destroy); // 删除某条供应商
+  router.get('/getEmployeeList', controller.employees.index); // 查询员工列表
+  router.get('/getDepartmentList', controller.departments.index); // 查询科室列表
+  router.get('/getAllDepartmentList', controller.departments.getAllDepartmentList); // 查询所有科室列表
+  router.get('/getRoleList', controller.roles.index); // 查询角色列表
 };

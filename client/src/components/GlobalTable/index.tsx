@@ -23,7 +23,7 @@ interface GlobalTableProps {
   searchPlaceholder: string; //搜索框的placeholder
   filterFormItems?: FilterFormItemType[]; //查询条件列表
   extra?: ReactNode; // GlobalTable的右上角（一般为按钮组件）
-  title?: ReactNode; // GlobalTable的左上角（一般为按钮组/tab组件）
+  title?: ReactNode; // GlobalTable的左上角（一般为按钮组/tab组件===一级tab面板）
   subTitle?: ReactNode; // 二级tab面板
   titleField?: { // title和subTitle的字段名和选中的值
     key: string;
@@ -55,7 +55,7 @@ const GlobalTable: React.FC<GlobalTableProps> = ({
   // useRef
   const filterForm = useRef<FormInstance>() // filterForma的form
 
-  console.log('GlobalTable')
+  console.log('GlobalTable',dispatchType)
 
   // 获取FilterForm的form
   const getForm = (form: FormInstance) => {
@@ -72,7 +72,7 @@ const GlobalTable: React.FC<GlobalTableProps> = ({
     setData(newData)
   }, [dataSource])
 
-  // tab面板切换时触发
+  // tab面板切换(需要靠titleField作为参数)时触发
   useEffect(() => {
     if (titleField.length) {
       console.log('titleField')
