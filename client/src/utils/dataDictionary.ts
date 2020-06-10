@@ -288,6 +288,22 @@ const USE_STATUSES = [
   },
 ];
 
+// 年龄单位
+const AGE_UNITS = [
+  {
+    label: '年',
+    value: 1,
+  },
+  {
+    label: '月',
+    value: 2,
+  },
+  {
+    label: '天',
+    value: 3,
+  },
+];
+
 export {
   ADMISSION_STATUSES,
   DEPARTMENTS,
@@ -300,4 +316,5 @@ export {
   CHIEF_COMPLAINT_TYPES,
   PRESCRIPTION_TYPES,
   USE_STATUSES,
+  AGE_UNITS
 };

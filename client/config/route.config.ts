@@ -34,7 +34,22 @@ export default [
       {
         name: '员工管理',
         path: '/system-settings/employee-management',
-        component:'SystemSettings/EmployeeManagement'
+        menu: {
+          hideChildren: true,
+        },
+        routes: [
+          {
+            name: '员工管理',
+            path: '/system-settings/employee-management',
+            component: 'SystemSettings/EmployeeManagement',
+          },
+          {
+            name: '员工管理',
+            path: '/system-settings/employee-management/add-employee',
+            component:
+              'SystemSettings/EmployeeManagement/components/AddOrEditEmployee',
+          },
+        ],
       },
       {
         name: '检查项目设置',

@@ -75,6 +75,20 @@ class EmployeesController extends Controller {
     }
   }
 
+  async getInitEmployeeNumber() {
+    const ctx = this.ctx;
+    const allData = await ctx.model.Employees.findAll({
+      'order': [
+        ['number', 'DESC']
+      ]
+    })
+    const number = allData.length ? allData[0].number + 1 : 1000
+    ctx.body = {
+      code: '1',
+      data:number
+    }
+  }
+
   async show() {
     const ctx = this.ctx;
     ctx.body = await ctx.model.User.findByPk(toInt(ctx.params.id));

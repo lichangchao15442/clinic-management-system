@@ -64,6 +64,15 @@ class RolesController extends Controller {
     }
   }
 
+  async getAllRoleList() {
+    const ctx = this.ctx;
+    const data = await ctx.model.Roles.findAll()
+    ctx.body = {
+      code: '1',
+      data
+    }
+  }
+
   async show() {
     const ctx = this.ctx;
     ctx.body = await ctx.model.User.findByPk(toInt(ctx.params.id));

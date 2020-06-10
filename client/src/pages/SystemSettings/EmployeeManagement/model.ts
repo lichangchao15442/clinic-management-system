@@ -6,6 +6,8 @@ import {
   fetchDepartmentList,
   fetchRoleList,
   fetchAllDepartmentList,
+  fetchInitEmployeeNumber,
+  fetchAllRoleList,
 } from './service';
 
 interface EmployeeManagementModelType {
@@ -16,6 +18,8 @@ interface EmployeeManagementModelType {
     fetchDepartmentList: Effect;
     fetchRoleList: Effect;
     fetchAllDepartmentList: Effect;
+    fetchInitEmployeeNumber: Effect;
+    fetchAllRoleList: Effect;
   };
   reducers: {
     save: Reducer;
@@ -32,6 +36,9 @@ const EmployeeManagementModel: EmployeeManagementModelType = {
     list: [],
     total: 0,
     departmentList: [],
+    operationType: 'add',
+    initEmployeeNumber: null,
+    roleList: [],
   },
 
   effects: {
@@ -86,6 +93,28 @@ const EmployeeManagementModel: EmployeeManagementModelType = {
         });
       }
     },
+    // 获取自动填充的员工编号
+    *fetchInitEmployeeNumber({ _ }, { call, put }) {
+      const response = yield call(fetchInitEmployeeNumber);
+      if (response.code === '1') {
+        yield put({
+          type: 'save',
+          payload: {
+            initEmployeeNumber: response.data,
+          },
+        });
+      }
+    },
+    // 获取所有的角色列表
+    *fetchAllRoleList({ payload }, { call, put }) {
+      const response = yield call(fetchAllRoleList);
+      if (response.code === '1') {
+        yield put({
+          type: 'save',
+          payload: { roleList: response.data },
+        });
+      }
+    },
   },
 
   reducers: {
@@ -105,6 +134,38 @@ const EmployeeManagementModel: EmployeeManagementModelType = {
           dispatch({
             type: 'fetchAllDepartmentList',
           });
+        }
+        if (pathname.includes('/system-settings/employee-management/add')) {
+          // 改变新增与编辑共用页面的操作类型为add
+          dispatch({
+            type: 'save',
+            payload: {
+              operationType: 'add',
+            },
+          });
+          // 新增/编辑员工信息
+          if (
+            pathname === '/system-settings/employee-management/add-employee' ||
+            pathname === '/system-settings/employee-management/edit-employee'
+          ) {
+            // 获取所有科室列表
+            dispatch({
+              type: 'fetchAllDepartmentList',
+            });
+            // 获取所有角色列表
+            dispatch({
+              type: 'fetchAllRoleList',
+            });
+            // 新增员工信息
+            if (
+              pathname === '/system-settings/employee-management/add-employee'
+            ) {
+              // 获取自动填充的员工编号
+              dispatch({
+                type: 'fetchInitEmployeeNumber',
+              });
+            }
+          }
         }
       });
     },

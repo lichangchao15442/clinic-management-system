@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Radio, Switch, Button, Select } from 'antd'
-import { connect } from 'umi'
+import { connect, history } from 'umi'
 import moment from 'moment'
 import { RadioChangeEvent } from 'antd/lib/radio'
 import { PlusCircleFilled } from '@ant-design/icons'
@@ -17,6 +17,7 @@ interface CurrentBasicDataType {
   key: string;
   dispatchType: string;
   searchPlaceholder: string;
+  addPath: string; // 点击新增跳转的页面
   columns: { [key: string]: any }[];
   filterFormItems?: FormItemType[];
 }
@@ -38,6 +39,7 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
       key: 'employee',
       dispatchType: 'employeeManagement/fetchEmployeeList',
       searchPlaceholder: '员工姓名',
+      addPath: '/system-settings/employee-management/add-employee',
       columns: [
         {
           dataIndex: 'key',
@@ -121,6 +123,7 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
       key: 'department',
       dispatchType: 'employeeManagement/fetchDepartmentList',
       searchPlaceholder: '科室名称',
+      addPath: '/system-settings/employee-management/add-department',
       columns: [
         {
           dataIndex: 'key',
@@ -174,6 +177,7 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
       key: 'role',
       dispatchType: 'employeeManagement/fetchRoleList',
       searchPlaceholder: '角色名称',
+      addPath: '/system-settings/employee-management/add-role',
       columns: [
         {
           dataIndex: 'key',
@@ -245,7 +249,11 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
     {radios.map(item => <Radio.Button key={item.key} value={item.key}>{item.label}</Radio.Button>)}
   </Radio.Group>
 
-  const extra = <Button type="primary" icon={<PlusCircleFilled />}>新增</Button>
+  const extra = <Button
+    type="primary"
+    icon={<PlusCircleFilled />}
+    onClick={() => { history.push(currentBasicData.addPath) }}
+  >新增</Button>
 
   const globalTableProps = {
     dispatchType: currentBasicData.dispatchType,

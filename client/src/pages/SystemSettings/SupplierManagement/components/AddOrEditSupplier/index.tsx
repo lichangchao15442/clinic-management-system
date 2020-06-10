@@ -5,6 +5,7 @@ import { Store } from 'rc-field-form/lib/interface'
 import { connect, history } from 'umi'
 
 import { USE_STATUSES } from '@/utils/dataDictionary'
+import { validatePhoneFormat } from '@/utils/utils'
 import request from '@/utils/request'
 import { SupplierManagementState } from '../../data'
 
@@ -132,7 +133,23 @@ const AddOrEditSupplier: React.FC<AddOrEditSupplierProps> = props => {
           </Form.Item>
         </Col>
         <Col {...colProps}>
-          <Form.Item label="联系电话" name="phone">
+          <Form.Item
+            label="联系电话"
+            name="phone"
+            validateTrigger="onBlur"
+            rules={[
+              () => ({
+                validator(rule, value) {
+                  if (value) {
+                    if (!validatePhoneFormat(value)) {
+                      return Promise.reject('请输入正确的手机格式')
+                    }
+                  }
+                  return Promise.resolve()
+                }
+              })
+            ]}
+          >
             <Input />
           </Form.Item>
         </Col>

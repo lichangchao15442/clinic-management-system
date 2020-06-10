@@ -9,15 +9,15 @@ export interface EmployeeType {
   ageUnit: number;
   createdTime: string;
   creator: string;
-  department: number;
+  department: string;
   email: string;
   gender: number;
-  idNumber: string;
+  idNumber: string; // 证件号码
   jobTitle: string; // 职称
   ownClinic: string; // 所属诊所
   password: string;
   phone: string;
-  role: number;
+  role: string;
   status: 0 | 1;
 }
 
@@ -47,4 +47,7 @@ export interface EmployeeManagementState {
   list: EmployeeType[] | DepartmentType[] | RoleType[];
   total: 0;
   departmentList: DepartmentType[];
+  operationType: 'add' | 'edit'; // 新增/编辑共用页面的当前操作类型
+  initEmployeeNumber: number | null; // 新增员工的自动填充的员工编号
+  roleList: RoleType[];
 }
