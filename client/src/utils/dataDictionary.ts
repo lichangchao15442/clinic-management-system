@@ -291,7 +291,7 @@ const USE_STATUSES = [
 // 年龄单位
 const AGE_UNITS = [
   {
-    label: '年',
+    label: '岁',
     value: 1,
   },
   {

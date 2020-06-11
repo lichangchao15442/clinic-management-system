@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react'
-import { connect } from 'umi'
-import { Card, Form, Button, Row, Col, Input, Select, Cascader, Switch } from 'antd'
+import { connect, history } from 'umi'
+import { Card, Form, Button, Row, Col, Input, Select, Cascader, Switch, message } from 'antd'
 import { SaveFilled, CaretLeftOutlined } from '@ant-design/icons'
 import { Store } from 'rc-field-form/lib/interface'
+import _ from 'lodash'
 
 import { AGE_UNITS, GENDERS } from '@/utils/dataDictionary'
 import { validatePhoneFormat, validateIDNumberFormat, validatePasswordFormat } from '@/utils/utils'
 import cities from '@/utils/city'
+import request from '@/utils/request'
 import { EmployeeManagementState } from '../../data'
 
 const { Option } = Select
@@ -18,7 +20,12 @@ const colProps = {
 }
 
 interface AddOrEditEmployeeProps {
-  employeeManagement: EmployeeManagementState
+  employeeManagement: EmployeeManagementState;
+  location: {
+    query: {
+      [key: string]: any
+    }
+  }
 }
 
 const AddOrEditEmployee: React.FC<AddOrEditEmployeeProps> = props => {
@@ -26,7 +33,19 @@ const AddOrEditEmployee: React.FC<AddOrEditEmployeeProps> = props => {
   const [form] = Form.useForm()
   const { setFieldsValue } = form
   // props
-  const { employeeManagement: { operationType, initEmployeeNumber, departmentList, roleList } } = props
+  const {
+    employeeManagement:
+    {
+      operationType,
+      initEmployeeNumber,
+      departmentList,
+      roleList,
+      employeeDetail
+    },
+    location: {
+      query = {}
+    }
+  } = props
 
   // 新增员工时，自动填充员工编号
   useEffect(() => {
@@ -35,9 +54,48 @@ const AddOrEditEmployee: React.FC<AddOrEditEmployeeProps> = props => {
     }
   }, [operationType, initEmployeeNumber])
 
+  // 编辑员工时，员工信息的回显
+  useEffect(() => {
+    if (operationType === 'edit' && !_.isEmpty(employeeDetail)) {
+      setFieldsValue({
+        ...employeeDetail,
+        address: employeeDetail.address.split(' '),
+        role: employeeDetail.role.split(' '),
+      })
+    }
+  }, [operationType, employeeDetail])
+
   // 提交表单且数据验证成功后回调事件
   const onFinish = (values: Store) => {
-    console.log('onFinish', values)
+    // console.log('onFinish', values)
+    const data = {
+      ...values,
+      address: values.address.join(" "), // 处理地址
+      role: values.role.join(" "), // 处理角色
+      creator: '顾兰兰', // TODO: 应为当前登录用户，暂且写死
+      ownClinic: '仁心诊所', // TODO: 应为当前登录系统的诊所，暂且写死
+    }
+    let promise
+    if (operationType === 'add') {
+      promise = request('/addEmployee', {
+        method: 'POST',
+        data
+      })
+    } else if (operationType === 'edit') {
+      promise = request('/editEmployee', {
+        method: 'POST',
+        data: {
+          ...data,
+          id: query.id
+        }
+      })
+    }
+    promise && promise.then((res) => {
+      if (res.code === '1') { // 新增成功
+        message.success('操作成功')
+        history.push('/system-settings/employee-management')
+      }
+    })
   }
 
   return <Form
@@ -59,7 +117,14 @@ const AddOrEditEmployee: React.FC<AddOrEditEmployeeProps> = props => {
       }
       extra={<div>
         <Button type="primary" icon={<SaveFilled />} htmlType="submit">保存</Button>
-        <Button style={{ marginLeft: 20 }} ghost type="primary" icon={<CaretLeftOutlined />}>返回</Button>
+        <Button
+          style={{ marginLeft: 20 }}
+          ghost
+          type="primary"
+          icon={<CaretLeftOutlined
+          />}
+          onClick={() => { history.goBack() }}
+        >返回</Button>
       </div>}
     >
       <Row gutter={24}>
@@ -229,7 +294,7 @@ const AddOrEditEmployee: React.FC<AddOrEditEmployeeProps> = props => {
                 }
               })
             ]}>
-            <Input placeholder="6-12位，包含数字和字母" />
+            <Input.Password placeholder="6-12位，包含数字和字母" />
           </Form.Item>
         </Col>
         <Col {...colProps}>

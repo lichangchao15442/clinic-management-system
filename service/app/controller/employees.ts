@@ -75,6 +75,7 @@ class EmployeesController extends Controller {
     }
   }
 
+  // 获取最新的员工编号，再+1
   async getInitEmployeeNumber() {
     const ctx = this.ctx;
     const allData = await ctx.model.Employees.findAll({
@@ -89,31 +90,56 @@ class EmployeesController extends Controller {
     }
   }
 
+  // 获取员工详情
   async show() {
     const ctx = this.ctx;
-    ctx.body = await ctx.model.User.findByPk(toInt(ctx.params.id));
+    const emplyoee = await ctx.model.Employees.findByPk(toInt(ctx.query.id));
+    if (!emplyoee) {
+      ctx.body = {
+        code: '0',
+        msg: '该员工不存在'
+      }
+      return 
+    }
+    ctx.body = {
+      code: '1',
+      data:emplyoee
+    }
   }
 
   async create() {
     const ctx = this.ctx;
-    const { name, age } = ctx.request.body;
-    const user = await ctx.model.User.create({ name, age });
+    const data = {
+      ...ctx.request.body,
+      createdTime: new Date()
+    }
+    await ctx.model.Employees.create(data);
     ctx.status = 201;
-    ctx.body = user;
+    ctx.body = {
+      code: '1',
+      msg: '操作成功'
+    };
   }
 
   async update() {
     const ctx = this.ctx;
-    const id = toInt(ctx.params.id);
-    const user = await ctx.model.User.findByPk(id);
-    if (!user) {
-      ctx.status = 404;
+    const { id: emplyoeeId, ...others } = ctx.request.body;
+
+    const id = toInt(emplyoeeId);
+    const emplyoee = await ctx.model.Employees.findByPk(id);
+    if (!emplyoee) {
+      ctx.body = {
+        code: '0',
+        msg: '该员工不存在'
+      };
       return;
     }
 
-    const { name, age } = ctx.request.body;
-    await user.update({ name, age });
-    ctx.body = user;
+    await emplyoee.update(others);
+    ctx.body = {
+      code: '1',
+      msg:'操作成功'
+    };
   }
 
   async destroy() {

@@ -53,3 +53,10 @@ export async function fetchInitEmployeeNumber() {
 export async function fetchAllRoleList() {
   return request('/getAllRoleList');
 }
+
+export async function fetchEmployeeDetail(params: { id: number }) {
+  return request('/getEmployeeDetail', {
+    method: 'GET',
+    params,
+  });
+}

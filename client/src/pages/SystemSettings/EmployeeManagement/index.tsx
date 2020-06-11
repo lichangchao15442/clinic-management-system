@@ -103,7 +103,7 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
           title: '操作',
           align: 'center',
           render: (record: EmployeeType) => <div style={{ width: 100 }} className="table-operate">
-            <Button type="link">编辑</Button>
+            <Button type="link" onClick={() => { history.push(`/system-settings/employee-management/edit-employee?id=${record.id}`) }}>编辑</Button>
             <Button type="link">删除</Button>
           </div>
         }
