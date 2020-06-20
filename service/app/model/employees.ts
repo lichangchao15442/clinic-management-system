@@ -37,7 +37,7 @@ module.exports = app => {
       field: "own_clinic"
     },
     department: STRING(30),
-    role: STRING(30),
+    role: STRING(255),
     password:STRING(30),
     createdTime: {
       type: DATE,

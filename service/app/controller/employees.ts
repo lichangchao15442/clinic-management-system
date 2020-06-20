@@ -1,4 +1,7 @@
 const Controller = require('egg').Controller;
+const _ = require('lodash')
+
+import { hasValue } from '../service/utils'
 
 const Op = require('sequelize').Op
 
@@ -6,26 +9,6 @@ const  toInt = (str) => {
   if (typeof str === 'number') return str;
   if (!str) return str;
   return parseInt(str, 10) || 0;
-}
-
-// 判断某个属性是否有值（为undefined、null、‘’)
-const hasValue = (value) => {
-  let isEmpty
-  switch (value) {
-    case undefined:
-      isEmpty = true
-      break;
-    case null:
-      isEmpty = true
-      break;
-    case '':
-      isEmpty = true
-      break;
-    default:
-      isEmpty = false
-      break;
-  }
-  return !isEmpty
 }
 
 class EmployeesController extends Controller {
@@ -65,12 +48,27 @@ class EmployeesController extends Controller {
     // 所有的患者数据
     const allData = await ctx.model.Employees.findAll({where});
     // 按条件查询患者
-    const data = await ctx.model.Employees.findAll(query);
+    let allEmployees = await ctx.model.Employees.findAll(query);
+
+    const data = await  Promise.all(allEmployees.map( async item => {
+      let roleNames: string[] = []
+      const roles = item.role.split(' ')
+      for (let j = 0; j < roles.length; j++) {
+        const role = await ctx.model.Roles.findByPk(toInt(roles[j]))
+        roleNames.push(role.name)
+      }
+      // 注意：使用解构会报错
+      let newItem = _.cloneDeep(item)
+      newItem.role = roleNames.join(' ')
+      return newItem
+    }))
+
+    
     ctx.body = {
       code: '1',
       data:{
-        list: data,
-        total:allData.length
+        list:  data,
+        total: allData.length
       }
     }
   }
