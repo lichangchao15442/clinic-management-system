@@ -1,15 +1,9 @@
 const Controller = require('egg').Controller;
 const _ = require('lodash')
 
-import { hasValue } from '../service/utils'
+import { hasValue, toInt } from '../service/utils'
 
 const Op = require('sequelize').Op
-
-const  toInt = (str) => {
-  if (typeof str === 'number') return str;
-  if (!str) return str;
-  return parseInt(str, 10) || 0;
-}
 
 class EmployeesController extends Controller {
   // 查询员工列表
@@ -142,15 +136,21 @@ class EmployeesController extends Controller {
 
   async destroy() {
     const ctx = this.ctx;
-    const id = toInt(ctx.params.id);
-    const user = await ctx.model.User.findByPk(id);
-    if (!user) {
-      ctx.status = 404;
+    const id = toInt(ctx.request.body.id);
+    const employee = await ctx.model.Employees.findByPk(id);
+    if (!employee) {
+      ctx.body = {
+        code: '0',
+        msg: '该用户不存在'
+      }
       return;
     }
 
-    await user.destroy();
-    ctx.status = 200;
+    await employee.destroy();
+    ctx.body = {
+      code: '1',
+      msg: '操作成功'
+    }
   }
 }
 

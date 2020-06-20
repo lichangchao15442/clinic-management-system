@@ -6,9 +6,10 @@ import { RadioChangeEvent } from 'antd/lib/radio'
 import { PlusCircleFilled } from '@ant-design/icons'
 
 import GlobalTable from '@/components/GlobalTable'
-import { EmployeeManagementState, EmployeeType, DepartmentType, RoleType } from './data'
 import { USE_STATUSES } from '@/utils/dataDictionary'
+import request from '@/utils/request'
 import { FormItemType } from '@/typings'
+import { EmployeeManagementState, EmployeeType, DepartmentType, RoleType } from './data'
 
 const { Option } = Select
 
@@ -33,6 +34,7 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
   // props
   const { employeeManagement: { list, total, departmentList } } = props
 
+  // 单独tab的数据
   const radios = [
     {
       label: '员工列表',
@@ -97,14 +99,14 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
           dataIndex: 'status',
           title: '员工状态',
           align: 'center',
-          render: (status: number) => <Switch checked={status === 1} />
+          render: (status: number, record: EmployeeType) => <Switch checked={status === 1} onClick={(checked) => onChangeStatus('employee', checked, record.id)} />
         },
         {
           title: '操作',
           align: 'center',
           render: (record: EmployeeType) => <div style={{ width: 100 }} className="table-operate">
             <Button type="link" onClick={() => { history.push(`/system-settings/employee-management/edit-employee?id=${record.id}`) }}>编辑</Button>
-            <Button type="link">删除</Button>
+            <Button type="link" onClick={() => { onRemove('employee', record.id) }}>删除</Button>
           </div>
         }
       ],
@@ -214,7 +216,7 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
           dataIndex: 'status',
           title: '角色状态',
           align: 'center',
-          render: (status: 0 | 1) => <span>{USE_STATUSES.find(item => item.value === status)?.label}</span>
+          render: (status: number) => <Switch checked={status === 1} />
         },
         {
           title: '操作',
@@ -232,6 +234,59 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
   const [currentBasicData, setCurrentBasicData] = useState<CurrentBasicDataType>(radios[0])
   const [isRefresh, setIsRefresh] = useState(false)
 
+  /**
+   * 统一的删除功能
+   * @param name 删除数据所属分类的名字
+   * @param id 删除数据的ID
+   */
+  const onRemove = (name: string, id: number) => {
+    let url = ''
+    switch (name) {
+      case 'employee':
+        url = '/deleteEmployee'
+        break;
+
+      default:
+        break;
+    }
+    const promise = request(url, {
+      method: 'DELETE',
+      data: { id }
+    })
+    promise.then((res) => {
+      if (res.code === '1') {
+        setIsRefresh(!isRefresh)
+      }
+    })
+  }
+
+  /**
+   * 统一的改变状态功能
+   * @param name 改变状态的数据所在分类的名字
+   * @param status 将要改变的状态
+   * @param id 该条数据的ID
+   */
+  const onChangeStatus = (name: string, status: boolean, id: number) => { 
+    let url = ''
+    switch (name) {
+      case 'employee':
+        url = '/updateEmployee'
+        break;
+    
+      default:
+        break;
+    }
+    const promise = request(url, {
+      method: 'POST',
+      data: {
+        id,
+        status
+      }
+    })
+    promise.then((res) => {
+      setIsRefresh(!isRefresh)
+    })
+  }
 
 
   // 选项变化时的回调

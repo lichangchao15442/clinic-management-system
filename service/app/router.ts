@@ -28,8 +28,9 @@ export default (app: Application) => {
   router.get('/getEmployeeList', controller.employees.index); // 查询员工列表
   router.get('/getInitEmployeeNumber', controller.employees.getInitEmployeeNumber); // 查询最新的员工编号
   router.post('/addEmployee', controller.employees.create); // 新增员工
-  router.post('/editEmployee', controller.employees.update); // 编辑员工
+  router.post('/updateEmployee', controller.employees.update); // 编辑员工
   router.get('/getEmployeeDetail', controller.employees.show); // 获取员工详情
+  router.delete('/deleteEmployee', controller.employees.destroy); // 删除员工
   router.get('/getDepartmentList', controller.departments.index); // 查询科室列表
   router.get('/getAllDepartmentList', controller.departments.getAllDepartmentList); // 查询所有科室列表
   router.get('/getRoleList', controller.roles.index); // 查询角色列表

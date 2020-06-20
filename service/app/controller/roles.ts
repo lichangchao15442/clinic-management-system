@@ -1,32 +1,8 @@
 const Controller = require('egg').Controller;
 
+import { toInt, hasValue } from '../service/utils'
+
 const Op = require('sequelize').Op
-
-const  toInt = (str) => {
-  if (typeof str === 'number') return str;
-  if (!str) return str;
-  return parseInt(str, 10) || 0;
-}
-
-// 判断某个属性是否有值（为undefined、null、‘’)
-const hasValue = (value) => {
-  let isEmpty
-  switch (value) {
-    case undefined:
-      isEmpty = true
-      break;
-    case null:
-      isEmpty = true
-      break;
-    case '':
-      isEmpty = true
-      break;
-    default:
-      isEmpty = false
-      break;
-  }
-  return !isEmpty
-}
 
 class RolesController extends Controller {
   async index() {
@@ -101,6 +77,7 @@ class RolesController extends Controller {
   }
 
   async destroy() {
+    // TODO: 删除角色，先删除有该角色的用户中的该角色，再删除角色
     const ctx = this.ctx;
     const id = toInt(ctx.params.id);
     const user = await ctx.model.User.findByPk(id);

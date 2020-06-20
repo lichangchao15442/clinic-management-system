@@ -82,7 +82,7 @@ const AddOrEditEmployee: React.FC<AddOrEditEmployeeProps> = props => {
         data
       })
     } else if (operationType === 'edit') {
-      promise = request('/editEmployee', {
+      promise = request('/updateEmployee', {
         method: 'POST',
         data: {
           ...data,
