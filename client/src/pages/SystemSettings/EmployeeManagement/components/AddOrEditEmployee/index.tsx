@@ -271,7 +271,7 @@ const AddOrEditEmployee: React.FC<AddOrEditEmployeeProps> = props => {
         <Col {...colProps}>
           <Form.Item label="角色" name="role" rules={[{ required: true, message: '请至少选择一个角色' }]}>
             <Select placeholder="请选择" mode="multiple">
-              {roleList.map(item => <Option key={item.id} value={item.name}>{item.name}</Option>)}
+              {roleList.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
             </Select>
           </Form.Item>
         </Col>

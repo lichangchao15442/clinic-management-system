@@ -14,7 +14,7 @@ export default defineConfig({
     '@primary-color': '#666EE8',
   },
   define: {
-    API_BASE: 'http://127.0.0.1:7001',
+    API_BASE: 'http://127.0.0.1:7002',
   },
   locale: {
     default: 'zh-CN',
