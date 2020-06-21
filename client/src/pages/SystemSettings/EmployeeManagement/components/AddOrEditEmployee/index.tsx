@@ -5,6 +5,7 @@ import { SaveFilled, CaretLeftOutlined } from '@ant-design/icons'
 import { Store } from 'rc-field-form/lib/interface'
 import _ from 'lodash'
 
+import IconTitle from '@/components/IconTitle'
 import { AGE_UNITS, GENDERS } from '@/utils/dataDictionary'
 import { validatePhoneFormat, validateIDNumberFormat, validatePasswordFormat } from '@/utils/utils'
 import cities from '@/utils/city'
@@ -110,10 +111,7 @@ const AddOrEditEmployee: React.FC<AddOrEditEmployeeProps> = props => {
   >
     <Card
       className="card-no-border"
-      title={<div className="title-icon-text">
-        <span></span>
-        <span>{`${operationType === 'add' ? '新增' : '编辑'}员工信息`}</span>
-      </div>
+      title={<IconTitle title={`${operationType === 'add' ? '新增' : '编辑'}员工信息`} />
       }
       extra={<div>
         <Button type="primary" icon={<SaveFilled />} htmlType="submit">保存</Button>

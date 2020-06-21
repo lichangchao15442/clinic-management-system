@@ -4,6 +4,7 @@ import { SaveFilled, CaretLeftOutlined, PlusCircleOutlined } from '@ant-design/i
 import { connect, history } from 'umi'
 import { Store } from 'rc-field-form/lib/interface'
 
+import IconTitle from '@/components/IconTitle'
 import { USE_STATUSES } from '@/utils/dataDictionary'
 import request from '@/utils/request'
 import { CheckProjectSettingStateType } from '../../data'
@@ -149,10 +150,7 @@ const AddOrEditCheckProject: React.FC<AddOrEditCheckProjectProps> = props => {
   >
     <Card
       className="card-no-border"
-      title={<div className="title-icon-text">
-        <span></span>
-        <span>{`${operationType === 'add' ? '新增' : '编辑'}项目`}</span>
-      </div>}
+      title={<IconTitle title={`${operationType === 'add' ? '新增' : '编辑'}项目`} />}
       extra={<div>
         <Button type="primary" icon={<SaveFilled />} htmlType="submit">保存</Button>
         <Button

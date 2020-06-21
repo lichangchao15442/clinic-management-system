@@ -4,6 +4,7 @@ import { SaveFilled, CaretLeftOutlined } from '@ant-design/icons'
 import { Store } from 'rc-field-form/lib/interface'
 import { connect, history } from 'umi'
 
+import IconTitle from '@/components/IconTitle'
 import { USE_STATUSES } from '@/utils/dataDictionary'
 import { validatePhoneFormat } from '@/utils/utils'
 import request from '@/utils/request'
@@ -83,10 +84,7 @@ const AddOrEditSupplier: React.FC<AddOrEditSupplierProps> = props => {
   >
     <Card
       className="card-no-border"
-      title={<div className="title-icon-text">
-        <span></span>
-        <span>新增供应商</span>
-      </div>}
+      title={<IconTitle title={`${operationType==='add'?'新增':'编辑'}供应商`} />}
       extra={
         <div>
           <Button type="primary" icon={<SaveFilled />} htmlType="submit">保存</Button>
