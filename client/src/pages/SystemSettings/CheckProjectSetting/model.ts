@@ -7,7 +7,6 @@ import {
   fetchUnitList,
   fetchProjectTypeList,
   fetchInvoiceItemList,
-  fetchProjectNumber,
   fetchCheckProjectDetail,
 } from './service';
 
@@ -19,7 +18,6 @@ interface CheckProjectSettingModelType {
     fetchUnitList: Effect;
     fetchProjectTypeList: Effect;
     fetchInvoiceItemList: Effect;
-    fetchProjectNumber: Effect;
     fetchCheckProjectDetail: Effect;
   };
   reducers: {
@@ -39,9 +37,8 @@ const CheckProjectSettingModel: CheckProjectSettingModelType = {
     unitList: [],
     projectTypeList: [],
     invoiceItemList: [],
-    initProjectNumber: null,
     operationType: 'add',
-    checkProjectDetail:null
+    checkProjectDetail: null,
   },
 
   effects: {
@@ -93,18 +90,6 @@ const CheckProjectSettingModel: CheckProjectSettingModelType = {
         });
       }
     },
-    // 获取项目项目编号
-    *fetchProjectNumber({ payload }, { call, put }) {
-      const response = yield call(fetchProjectNumber);
-      if (response.code === '1') {
-        yield put({
-          type: 'save',
-          payload: {
-            initProjectNumber: response.data,
-          },
-        });
-      }
-    },
     // 获取检查项目详情
     *fetchCheckProjectDetail({ payload }, { call, put }) {
       const response = yield call(fetchCheckProjectDetail, payload);
@@ -152,7 +137,10 @@ const CheckProjectSettingModel: CheckProjectSettingModelType = {
             operationType = 'add';
             // 获取自动生成的项目编号
             dispatch({
-              type: 'fetchProjectNumber',
+              type: 'common/fetchInitNumber',
+              payload: {
+                name: 'checkProject',
+              },
             });
           } else if (
             pathname === '/system-settings/check-project-setting/edit'

@@ -48,7 +48,6 @@ export interface EmployeeManagementState {
   total: 0;
   departmentList: DepartmentType[];
   operationType: 'add' | 'edit'; // 新增/编辑共用页面的当前操作类型
-  initEmployeeNumber: number | null; // 新增员工的自动填充的员工编号
   roleList: RoleType[];
   employeeDetail: EmployeeType | {};
 }

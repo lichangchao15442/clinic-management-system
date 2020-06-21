@@ -1,7 +1,7 @@
 import { Application } from 'egg';
 
 export default (app: Application) => {
-  const { controller, router } = app;
+  const { controller, router,  } = app;
 
   router.get('/', controller.home.index);
   router.get('/getPatientList', controller.patients.index); // 获取患者列表
@@ -26,7 +26,6 @@ export default (app: Application) => {
   router.post('/editSupplier', controller.suppliers.update); // 编辑供应商详情
   router.delete('/deleteSupplier', controller.suppliers.destroy); // 删除某条供应商
   router.get('/getEmployeeList', controller.employees.index); // 查询员工列表
-  router.get('/getInitEmployeeNumber', controller.employees.getInitEmployeeNumber); // 查询最新的员工编号
   router.post('/addEmployee', controller.employees.create); // 新增员工
   router.post('/updateEmployee', controller.employees.update); // 编辑员工
   router.get('/getEmployeeDetail', controller.employees.show); // 获取员工详情
@@ -35,4 +34,5 @@ export default (app: Application) => {
   router.get('/getAllDepartmentList', controller.departments.getAllDepartmentList); // 查询所有科室列表
   router.get('/getRoleList', controller.roles.index); // 查询角色列表
   router.get('/getAllRoleList', controller.roles.getAllRoleList); // 查询所有的角色列表
+  router.get('/getInitNumber', controller.common.getInitNumber); // 获取某个表的最新编号+1
 };

@@ -10,6 +10,7 @@ import { AGE_UNITS, GENDERS } from '@/utils/dataDictionary'
 import { validatePhoneFormat, validateIDNumberFormat, validatePasswordFormat } from '@/utils/utils'
 import cities from '@/utils/city'
 import request from '@/utils/request'
+import { CommonState } from '@/models/common'
 import { EmployeeManagementState } from '../../data'
 
 const { Option } = Select
@@ -22,6 +23,7 @@ const colProps = {
 
 interface AddOrEditEmployeeProps {
   employeeManagement: EmployeeManagementState;
+  common: CommonState
   location: {
     query: {
       [key: string]: any
@@ -38,11 +40,11 @@ const AddOrEditEmployee: React.FC<AddOrEditEmployeeProps> = props => {
     employeeManagement:
     {
       operationType,
-      initEmployeeNumber,
       departmentList,
       roleList,
       employeeDetail
     },
+    common: { initNumber },
     location: {
       query = {}
     }
@@ -51,9 +53,9 @@ const AddOrEditEmployee: React.FC<AddOrEditEmployeeProps> = props => {
   // 新增员工时，自动填充员工编号
   useEffect(() => {
     if (operationType === 'add') {
-      setFieldsValue({ number: initEmployeeNumber })
+      setFieldsValue({ number: initNumber })
     }
-  }, [operationType, initEmployeeNumber])
+  }, [operationType, initNumber])
 
   // 编辑员工时，员工信息的回显
   useEffect(() => {
@@ -305,6 +307,7 @@ const AddOrEditEmployee: React.FC<AddOrEditEmployeeProps> = props => {
   </Form>
 }
 
-export default connect(({ employeeManagement }: {
-  employeeManagement: EmployeeManagementState
-}) => ({ employeeManagement }))(AddOrEditEmployee)
+export default connect(({ employeeManagement, common }: {
+  employeeManagement: EmployeeManagementState;
+  common: CommonState
+}) => ({ employeeManagement, common }))(AddOrEditEmployee)

@@ -67,21 +67,6 @@ class EmployeesController extends Controller {
     }
   }
 
-  // 获取最新的员工编号，再+1
-  async getInitEmployeeNumber() {
-    const ctx = this.ctx;
-    const allData = await ctx.model.Employees.findAll({
-      'order': [
-        ['number', 'DESC']
-      ]
-    })
-    const number = allData.length ? allData[0].number + 1 : 1000
-    ctx.body = {
-      code: '1',
-      data:number
-    }
-  }
-
   // 获取员工详情
   async show() {
     const ctx = this.ctx;

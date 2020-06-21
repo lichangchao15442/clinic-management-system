@@ -83,7 +83,7 @@ const filterFormItems = [
 ]
 
 interface CheckProjectSettingProps {
-  checkProjectSetting: CheckProjectSettingStateType
+  checkProjectSetting: CheckProjectSettingStateType;
 }
 
 const CheckProjectSetting: React.FC<CheckProjectSettingProps> = props => {
@@ -114,5 +114,5 @@ const CheckProjectSetting: React.FC<CheckProjectSettingProps> = props => {
 }
 
 export default connect(({ checkProjectSetting }: {
-  checkProjectSetting: CheckProjectSettingStateType
+  checkProjectSetting: CheckProjectSettingStateType;
 }) => ({ checkProjectSetting }))(CheckProjectSetting)

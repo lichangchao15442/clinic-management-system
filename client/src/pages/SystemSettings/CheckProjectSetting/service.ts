@@ -26,10 +26,6 @@ export async function fetchInvoiceItemList() {
   return request('/getInvoiceItemList');
 }
 
-export async function fetchProjectNumber() {
-  return request('/getProjectNumber');
-}
-
 export async function fetchCheckProjectDetail(params: { id: number }) {
   return request('/getCheckProjectDetail', {
     method: 'GET',

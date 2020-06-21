@@ -3,6 +3,7 @@
 
 import 'egg';
 import ExportCheckProjects from '../../../app/controller/checkProjects';
+import ExportCommon from '../../../app/controller/common';
 import ExportDepartments from '../../../app/controller/departments';
 import ExportDictionary from '../../../app/controller/dictionary';
 import ExportEmployees from '../../../app/controller/employees';
@@ -15,6 +16,7 @@ import ExportSuppliers from '../../../app/controller/suppliers';
 declare module 'egg' {
   interface IController {
     checkProjects: ExportCheckProjects;
+    common: ExportCommon;
     departments: ExportDepartments;
     dictionary: ExportDictionary;
     employees: ExportEmployees;

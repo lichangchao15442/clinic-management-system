@@ -7,6 +7,7 @@ import { Store } from 'rc-field-form/lib/interface'
 import IconTitle from '@/components/IconTitle'
 import { USE_STATUSES } from '@/utils/dataDictionary'
 import request from '@/utils/request'
+import { CommonState } from '@/models/common'
 import { CheckProjectSettingStateType } from '../../data'
 import styles from './index.less'
 
@@ -19,6 +20,7 @@ const { Option } = Select
 
 interface AddOrEditCheckProjectProps {
   checkProjectSetting: CheckProjectSettingStateType;
+  common: CommonState;
   location: {
     query: {
       [key: string]: any
@@ -35,10 +37,10 @@ const AddOrEditCheckProject: React.FC<AddOrEditCheckProjectProps> = props => {
       unitList,
       projectTypeList,
       invoiceItemList,
-      initProjectNumber,
       operationType,
       checkProjectDetail = {}
     },
+    common: { initNumber },
     location: { query = {} }
   } = props
 
@@ -71,10 +73,10 @@ const AddOrEditCheckProject: React.FC<AddOrEditCheckProjectProps> = props => {
   useEffect(() => {
     if (operationType === 'add') {
       setFieldsValue({
-        number: initProjectNumber
+        number: initNumber
       })
     }
-  }, [initProjectNumber, operationType])
+  }, [initNumber, operationType])
 
   // 为编辑时，数据回显
   useEffect(() => {
@@ -282,6 +284,7 @@ const AddOrEditCheckProject: React.FC<AddOrEditCheckProjectProps> = props => {
   </Form>
 }
 
-export default connect(({ checkProjectSetting }: {
-  checkProjectSetting: CheckProjectSettingStateType
-}) => ({ checkProjectSetting }))(AddOrEditCheckProject)
+export default connect(({ checkProjectSetting, common }: {
+  checkProjectSetting: CheckProjectSettingStateType;
+  common: CommonState;
+}) => ({ checkProjectSetting, common }))(AddOrEditCheckProject)

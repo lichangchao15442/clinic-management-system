@@ -7,7 +7,6 @@ import {
   fetchDepartmentList,
   fetchRoleList,
   fetchAllDepartmentList,
-  fetchInitEmployeeNumber,
   fetchAllRoleList,
   fetchEmployeeDetail,
 } from './service';
@@ -21,7 +20,6 @@ interface EmployeeManagementModelType {
     fetchDepartmentList: Effect;
     fetchRoleList: Effect;
     fetchAllDepartmentList: Effect;
-    fetchInitEmployeeNumber: Effect;
     fetchAllRoleList: Effect;
   };
   reducers: {
@@ -40,7 +38,6 @@ const EmployeeManagementModel: EmployeeManagementModelType = {
     total: 0,
     departmentList: [],
     operationType: 'add',
-    initEmployeeNumber: null,
     roleList: [],
     employeeDetail: {},
   },
@@ -105,18 +102,6 @@ const EmployeeManagementModel: EmployeeManagementModelType = {
           type: 'save',
           payload: {
             departmentList: response.data,
-          },
-        });
-      }
-    },
-    // 获取自动填充的员工编号
-    *fetchInitEmployeeNumber({ _ }, { call, put }) {
-      const response = yield call(fetchInitEmployeeNumber);
-      if (response.code === '1') {
-        yield put({
-          type: 'save',
-          payload: {
-            initEmployeeNumber: response.data,
           },
         });
       }
@@ -193,7 +178,10 @@ const EmployeeManagementModel: EmployeeManagementModelType = {
           ) {
             // 获取自动填充的员工编号
             dispatch({
-              type: 'fetchInitEmployeeNumber',
+              type: 'common/fetchInitNumber',
+              payload: {
+                name: 'employee',
+              },
             });
           } else {
             // 编辑员工信息
@@ -205,6 +193,20 @@ const EmployeeManagementModel: EmployeeManagementModelType = {
               },
             });
           }
+        }
+
+        if (
+          pathname === '/system-settings/employee-management/add-department'
+        ) {
+          // 新增科室
+
+          // 获取自动填充的科室编号
+          dispatch({
+            type: 'common/fetchInitNumber',
+            payload: {
+              name: 'department',
+            },
+          });
         }
       });
     },

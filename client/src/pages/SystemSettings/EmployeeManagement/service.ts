@@ -46,10 +46,6 @@ export async function fetchAllDepartmentList(params: {}) {
   });
 }
 
-export async function fetchInitEmployeeNumber() {
-  return request('/getInitEmployeeNumber');
-}
-
 export async function fetchAllRoleList() {
   return request('/getAllRoleList');
 }
