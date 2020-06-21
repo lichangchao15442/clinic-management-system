@@ -81,8 +81,7 @@ const DictionaryTableMaintenance: React.FC<DictionaryTableMaintenanceProps> = pr
       if (res.code === '1') { // 操作成功
         // 刷新列表
         console.log('onRemoveDictionary-isRefresh', isRefresh)
-        // TODO: bug:注意：此处有一个bug：只能取到初始的isRefresh，原因：列表的列名改变导致
-        setIsRefresh(!isRefresh)
+        setIsRefresh(isRefresh => !isRefresh)
       }
     })
   }
