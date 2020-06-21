@@ -233,6 +233,7 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
   // useState
   const [currentBasicData, setCurrentBasicData] = useState<CurrentBasicDataType>(radios[0])
   const [isRefresh, setIsRefresh] = useState(false)
+  const [count, setCount] = useState(0)
 
   /**
    * 统一的删除功能
@@ -255,7 +256,7 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
     })
     promise.then((res) => {
       if (res.code === '1') {
-        setIsRefresh(!isRefresh)
+        setIsRefresh(isRefresh => !isRefresh)
       }
     })
   }
@@ -266,13 +267,13 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
    * @param status 将要改变的状态
    * @param id 该条数据的ID
    */
-  const onChangeStatus = (name: string, status: boolean, id: number) => { 
+  const onChangeStatus = (name: string, status: boolean, id: number) => {
     let url = ''
     switch (name) {
       case 'employee':
         url = '/updateEmployee'
         break;
-    
+
       default:
         break;
     }
@@ -284,7 +285,10 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
       }
     })
     promise.then((res) => {
-      setIsRefresh(!isRefresh)
+      if (res.code === '1') {
+        setIsRefresh(isRefresh => !isRefresh)
+        setCount(count + 1)
+      }
     })
   }
 
