@@ -11,7 +11,6 @@ import {
   fetchEmployeeDetail,
   fetchDepartmentDetail,
 } from './service';
-import { request } from 'express';
 
 interface EmployeeManagementModelType {
   namespace: string;
@@ -234,6 +233,16 @@ const EmployeeManagementModel: EmployeeManagementModelType = {
             type: 'fetchDepartmentDetail',
             payload: {
               id: query.id,
+            },
+          });
+        }
+
+        if (pathname === '/system-settings/employee-management/add-role') {
+          // 获取自动填充的角色编号
+          dispatch({
+            type: 'common/fetchInitNumber',
+            payload: {
+              name: 'role',
             },
           });
         }

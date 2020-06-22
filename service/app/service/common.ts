@@ -10,29 +10,30 @@ class CommonService extends Service {
   async getNumber() {
     const ctx = this.ctx;
     const { name } = ctx.query;
-    let allData:{[key: string]:any}[] = []
+    let modelName = ''
     switch (name) {
       case 'department':
-        allData = await ctx.model.Departments.findAll({
-          order:[['number','DESC']]
-        })
+        modelName = 'Departments'
         break;
     
       case 'employee':
-        allData = await ctx.model.Employees.findAll({
-          order:[['number','DESC']]
-        })
+        modelName = 'Employees'
         break;
     
       case 'checkProject':
-        allData = await ctx.model.CheckProjects.findAll({
-          order:[['number','DESC']]
-        })
+        modelName = 'CheckProjects'
+        break;
+    
+      case 'role':
+        modelName = 'Roles'
         break;
     
       default:
         break;
     }
+    const allData = modelName && await ctx.model[modelName].findAll({
+      order:[['number','DESC']]
+    })
     const number = allData.length ? allData[0].number + 1 : 1000
     return number
   }

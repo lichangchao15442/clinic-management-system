@@ -38,5 +38,6 @@ export default (app: Application) => {
   router.delete('/deleteDepartment', controller.departments.destroy); //  删除科室
   router.get('/getRoleList', controller.roles.index); // 查询角色列表
   router.get('/getAllRoleList', controller.roles.getAllRoleList); // 查询所有的角色列表
+  router.post('/addRole', controller.roles.create); // 新增角色
   router.get('/getInitNumber', controller.common.getInitNumber); // 获取某个表的最新编号+1
 };
