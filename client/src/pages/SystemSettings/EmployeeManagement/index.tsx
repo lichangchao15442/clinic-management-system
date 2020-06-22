@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Radio, Switch, Button, Select } from 'antd'
-import { connect, history } from 'umi'
+import { connect, history, Dispatch } from 'umi'
 import moment from 'moment'
 import { RadioChangeEvent } from 'antd/lib/radio'
 import { PlusCircleFilled } from '@ant-design/icons'
@@ -27,12 +27,13 @@ interface CurrentBasicDataType {
 
 
 interface EmployeeManagementProps {
-  employeeManagement: EmployeeManagementState
+  employeeManagement: EmployeeManagementState;
+  dispatch: Dispatch;
 }
 
 const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
   // props
-  const { employeeManagement: { list, total, departmentList } } = props
+  const { employeeManagement: { list, total, departmentList, currentListName }, dispatch } = props
 
   // 单独tab的数据
   const radios = [
@@ -295,14 +296,22 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
 
   // 选项变化时的回调
   const onChange = (e: RadioChangeEvent) => {
+    // 改变当前选中列表的值
+    dispatch({
+      type: 'employeeManagement/save',
+      payload: {
+        currentListName: e.target.value
+      }
+    })
+    // 改变当前选中的列表的数据
     const radioData = radios.find(item => item.key === e.target.value)
     setCurrentBasicData(radioData)
     setIsRefresh(!isRefresh)
   }
 
   const title = <Radio.Group
-    defaultValue={radios[0].key}
     buttonStyle="solid"
+    value={currentListName}
     onChange={onChange}
   >
     {radios.map(item => <Radio.Button key={item.key} value={item.key}>{item.label}</Radio.Button>)}

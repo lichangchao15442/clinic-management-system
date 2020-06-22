@@ -32,6 +32,7 @@ export default (app: Application) => {
   router.delete('/deleteEmployee', controller.employees.destroy); // 删除员工
   router.get('/getDepartmentList', controller.departments.index); // 查询科室列表
   router.get('/getAllDepartmentList', controller.departments.getAllDepartmentList); // 查询所有科室列表
+  router.post('/addDepartment', controller.departments.create); // 新增科室
   router.get('/getRoleList', controller.roles.index); // 查询角色列表
   router.get('/getAllRoleList', controller.roles.getAllRoleList); // 查询所有的角色列表
   router.get('/getInitNumber', controller.common.getInitNumber); // 获取某个表的最新编号+1

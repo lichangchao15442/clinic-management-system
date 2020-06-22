@@ -92,10 +92,24 @@ class PatientsController extends Controller {
 
   async create() {
     const ctx = this.ctx;
-    const { name, age } = ctx.request.body;
-    const user = await ctx.model.User.create({ name, age });
-    ctx.status = 201;
-    ctx.body = user;
+    const { name } = ctx.request.body;
+    // 名称去重
+    const hasName = await ctx.model.Departments.findAll({
+      where: {
+        name
+      }
+    })
+    if (hasName.length) {
+    return ctx.body = {
+        code: '0',
+        msg: '科室名称已存在！'
+      }
+    }
+    await ctx.model.Departments.create(ctx.request.body);
+    ctx.body = {
+      code: '1',
+      msg: '操作成功'
+    }
   }
 
   async update() {

@@ -40,6 +40,7 @@ const EmployeeManagementModel: EmployeeManagementModelType = {
     operationType: 'add',
     roleList: [],
     employeeDetail: {},
+    currentListName: 'employee',
   },
 
   effects: {
