@@ -134,15 +134,21 @@ class PatientsController extends Controller {
 
   async destroy() {
     const ctx = this.ctx;
-    const id = toInt(ctx.params.id);
-    const user = await ctx.model.User.findByPk(id);
-    if (!user) {
-      ctx.status = 404;
+    const id = toInt(ctx.request.body.id);
+    const department = await ctx.model.Departments.findByPk(id);
+    if (!department) {
+      ctx.body = {
+        code: '0',
+        msg: '该科室不存在'
+      };
       return;
-    }
+    };
 
-    await user.destroy();
-    ctx.status = 200;
+    await department.destroy();
+    ctx.body = {
+      code: '1',
+      msg: '操作成功'
+    };
   }
 }
 

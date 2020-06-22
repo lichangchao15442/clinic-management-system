@@ -170,7 +170,7 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
           align: 'center',
           render: (record: DepartmentType) => <div style={{ width: 100 }} className="table-operate">
             <Button type="link" onClick={() => { history.push(`/system-settings/employee-management/edit-department?id=${record.id}`) }}>编辑</Button>
-            <Button type="link">删除</Button>
+            <Button type="link" onClick={() => { onRemove('department', record.id) }}>删除</Button>
           </div>
         }
       ]
@@ -253,6 +253,10 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
       case 'employee':
         url = '/deleteEmployee'
         break;
+      
+      case 'department':
+        url = '/deleteDepartment'
+        break;
 
       default:
         break;
@@ -280,7 +284,7 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
       case 'employee':
         url = '/updateEmployee'
         break;
-      
+
       case 'department':
         url = '/updateDepartment'
         break;
