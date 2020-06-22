@@ -1,32 +1,8 @@
 const Controller = require('egg').Controller;
 
+import {toInt, hasValue} from '../service/utils'
+
 const Op = require('sequelize').Op
-
-const  toInt = (str) => {
-  if (typeof str === 'number') return str;
-  if (!str) return str;
-  return parseInt(str, 10) || 0;
-}
-
-// 判断某个属性是否有值（为undefined、null、‘’)
-const hasValue = (value) => {
-  let isEmpty
-  switch (value) {
-    case undefined:
-      isEmpty = true
-      break;
-    case null:
-      isEmpty = true
-      break;
-    case '':
-      isEmpty = true
-      break;
-    default:
-      isEmpty = false
-      break;
-  }
-  return !isEmpty
-}
 
 class PatientsController extends Controller {
   async index() {
@@ -87,7 +63,17 @@ class PatientsController extends Controller {
 
   async show() {
     const ctx = this.ctx;
-    ctx.body = await ctx.model.User.findByPk(toInt(ctx.params.id));
+    const data = await ctx.model.Departments.findByPk(toInt(ctx.query.id));
+    if (!data) {
+      return ctx.body = {
+        code: '0',
+        msg: '该科室不存在'
+      }
+    }
+    ctx.body = {
+      code: '1',
+      data
+    }
   }
 
   async create() {
@@ -98,12 +84,13 @@ class PatientsController extends Controller {
       where: {
         name
       }
-    })
+    });
     if (hasName.length) {
-    return ctx.body = {
+      ctx.body = {
         code: '0',
         msg: '科室名称已存在！'
-      }
+      };
+      return;
     }
     await ctx.model.Departments.create(ctx.request.body);
     ctx.body = {
@@ -114,16 +101,35 @@ class PatientsController extends Controller {
 
   async update() {
     const ctx = this.ctx;
-    const id = toInt(ctx.params.id);
-    const user = await ctx.model.User.findByPk(id);
-    if (!user) {
-      ctx.status = 404;
-      return;
+    const {id, ...others} = ctx.request.body;
+    const department = await ctx.model.Departments.findByPk(toInt(id));
+    if (!department) {
+      ctx.body = {
+        code: '0',
+        msg: '该科室不存在！'
+      }
+    }
+    // 名称去重
+    if (others.name) {
+      const hasNames = others.name !== department.name && await ctx.model.Departments.findAll({
+        where: {
+          name: others.name
+        }
+      });
+      if (hasNames) {
+        ctx.body = {
+          code: '0',
+          msg: '该科室名称已存在'
+        };
+        return;
+      };
     }
 
-    const { name, age } = ctx.request.body;
-    await user.update({ name, age });
-    ctx.body = user;
+    await department.update(others);
+    ctx.body = {
+      code: '1',
+      msg: '操作成功'
+    };
   }
 
   async destroy() {

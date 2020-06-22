@@ -56,3 +56,10 @@ export async function fetchEmployeeDetail(params: { id: number }) {
     params,
   });
 }
+
+export async function fetchDepartmentDetail(params: { id: number }) {
+  return request('/getDepartmentDetail', {
+    method: 'GET',
+    params,
+  });
+}

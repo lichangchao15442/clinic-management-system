@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Radio, Switch, Button, Select } from 'antd'
 import { connect, history, Dispatch } from 'umi'
 import moment from 'moment'
@@ -163,13 +163,13 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
           dataIndex: 'status',
           title: '科室状态',
           align: 'center',
-          render: (status: number) => <Switch checked={status === 1} />
+          render: (status: number, record: DepartmentType) => <Switch checked={status === 1} onClick={(checked) => onChangeStatus('department', checked, record.id)} />
         },
         {
           title: '操作',
           align: 'center',
           render: (record: DepartmentType) => <div style={{ width: 100 }} className="table-operate">
-            <Button type="link">编辑</Button>
+            <Button type="link" onClick={() => { history.push(`/system-settings/employee-management/edit-department?id=${record.id}`) }}>编辑</Button>
             <Button type="link">删除</Button>
           </div>
         }
@@ -234,7 +234,13 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
   // useState
   const [currentBasicData, setCurrentBasicData] = useState<CurrentBasicDataType>(radios[0])
   const [isRefresh, setIsRefresh] = useState(false)
-  const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    // 改变当前选中的列表的数据
+    const radioData = radios.find(item => item.key === currentListName)
+    setCurrentBasicData(radioData)
+    setIsRefresh(!isRefresh)
+  }, [currentListName])
 
   /**
    * 统一的删除功能
@@ -274,6 +280,10 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
       case 'employee':
         url = '/updateEmployee'
         break;
+      
+      case 'department':
+        url = '/updateDepartment'
+        break;
 
       default:
         break;
@@ -288,7 +298,6 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
     promise.then((res) => {
       if (res.code === '1') {
         setIsRefresh(isRefresh => !isRefresh)
-        setCount(count + 1)
       }
     })
   }
@@ -303,10 +312,6 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
         currentListName: e.target.value
       }
     })
-    // 改变当前选中的列表的数据
-    const radioData = radios.find(item => item.key === e.target.value)
-    setCurrentBasicData(radioData)
-    setIsRefresh(!isRefresh)
   }
 
   const title = <Radio.Group

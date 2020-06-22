@@ -19,6 +19,9 @@ const colProps = {
 interface AddOrEditDepartmentprops {
   employeeManagement: EmployeeManagementState;
   common: CommonState;
+  location: {
+    query: { [key: string]: any }
+  }
 }
 
 const AddOrEditDepartment: React.FC<AddOrEditDepartmentprops> = props => {
@@ -26,7 +29,11 @@ const AddOrEditDepartment: React.FC<AddOrEditDepartmentprops> = props => {
   const [form] = Form.useForm()
   const { setFieldsValue } = form
   // props
-  const { employeeManagement: { operationType }, common: { initNumber } } = props
+  const {
+    employeeManagement: { operationType, departmentDetail },
+    common: { initNumber },
+    location: { query }
+  } = props
 
   /** 自动填充编号 */
   useEffect(() => {
@@ -37,6 +44,16 @@ const AddOrEditDepartment: React.FC<AddOrEditDepartmentprops> = props => {
     }
   }, [initNumber])
 
+  /** 当前操作为编辑表单时，回显表单值 */
+  useEffect(() => {
+    if (operationType === 'edit') {
+      setFieldsValue({
+        ...departmentDetail,
+        createdTime: moment(departmentDetail.createdTime).format('YYYY-MM-DD hh:mm:ss')
+      })
+    }
+  }, [operationType, departmentDetail])
+
   /** 提交表单且通过校验触发的回调函数 */
   const onFinish = (values: Store) => {
     console.log('onFinish', values)
@@ -46,11 +63,18 @@ const AddOrEditDepartment: React.FC<AddOrEditDepartmentprops> = props => {
         method: 'POST',
         data: values
       })
+    } else if (operationType === 'edit') {
+      promise = request('/updateDepartment', {
+        method: 'POST',
+        data: {
+          ...values,
+          id: query.id
+        }
+      })
     }
     promise && promise.then(res => {
       console.log('res', res)
       if (res.code === '1') {
-        // TODO: 回到科室列表的tab（将tab放入model中，进行控制）
         history.push('/system-settings/employee-management')
       }
     })
@@ -67,7 +91,7 @@ const AddOrEditDepartment: React.FC<AddOrEditDepartmentprops> = props => {
   >
     <Card
       className="card-no-border"
-      title={<IconTitle title={`${operationType === 'add' ? '新增' : '编辑啊'}科室信息`} />}
+      title={<IconTitle title={`${operationType === 'add' ? '新增' : '编辑'}科室信息`} />}
       extra={<div>
         <Button type="primary" htmlType="submit" icon={<SaveFilled />}>保存</Button>
         <Button

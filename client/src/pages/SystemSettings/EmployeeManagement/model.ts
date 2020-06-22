@@ -9,7 +9,9 @@ import {
   fetchAllDepartmentList,
   fetchAllRoleList,
   fetchEmployeeDetail,
+  fetchDepartmentDetail,
 } from './service';
+import { request } from 'express';
 
 interface EmployeeManagementModelType {
   namespace: string;
@@ -21,6 +23,7 @@ interface EmployeeManagementModelType {
     fetchRoleList: Effect;
     fetchAllDepartmentList: Effect;
     fetchAllRoleList: Effect;
+    fetchDepartmentDetail: Effect;
   };
   reducers: {
     save: Reducer;
@@ -41,6 +44,7 @@ const EmployeeManagementModel: EmployeeManagementModelType = {
     roleList: [],
     employeeDetail: {},
     currentListName: 'employee',
+    departmentDetail: {},
   },
 
   effects: {
@@ -82,6 +86,30 @@ const EmployeeManagementModel: EmployeeManagementModelType = {
         });
       }
     },
+    // 获取所有的科室数据
+    *fetchAllDepartmentList({ payload }, { call, put }) {
+      const response = yield call(fetchAllDepartmentList, payload);
+      if (response.code === '1') {
+        yield put({
+          type: 'save',
+          payload: {
+            departmentList: response.data,
+          },
+        });
+      }
+    },
+    // 获取科室详情
+    *fetchDepartmentDetail({ payload }, { call, put }) {
+      const response = yield call(fetchDepartmentDetail, payload);
+      if (response.code === '1') {
+        yield put({
+          type: 'save',
+          payload: {
+            departmentDetail: response.data,
+          },
+        });
+      }
+    },
     // 获取角色列表
     *fetchRoleList({ payload }, { call, put }) {
       const response = yield call(fetchRoleList, payload);
@@ -91,18 +119,6 @@ const EmployeeManagementModel: EmployeeManagementModelType = {
           payload: {
             list: response.data.list,
             total: response.data.total,
-          },
-        });
-      }
-    },
-    // 获取所有的科室数据
-    *fetchAllDepartmentList({ payload }, { call, put }) {
-      const response = yield call(fetchAllDepartmentList, payload);
-      if (response.code === '1') {
-        yield put({
-          type: 'save',
-          payload: {
-            departmentList: response.data,
           },
         });
       }
@@ -206,6 +222,18 @@ const EmployeeManagementModel: EmployeeManagementModelType = {
             type: 'common/fetchInitNumber',
             payload: {
               name: 'department',
+            },
+          });
+        }
+        if (
+          pathname === '/system-settings/employee-management/edit-department'
+        ) {
+          // 编辑科室
+          // 获取科室详情
+          dispatch({
+            type: 'fetchDepartmentDetail',
+            payload: {
+              id: query.id,
             },
           });
         }

@@ -61,6 +61,12 @@ export default [
             component:
               'SystemSettings/EmployeeManagement/components/AddOrEditDepartment',
           },
+          {
+            name: '员工管理',
+            path: '/system-settings/employee-management/edit-department',
+            component:
+              'SystemSettings/EmployeeManagement/components/AddOrEditDepartment',
+          },
         ],
       },
       {
