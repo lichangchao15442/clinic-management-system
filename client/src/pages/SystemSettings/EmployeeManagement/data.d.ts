@@ -52,4 +52,5 @@ export interface EmployeeManagementState {
   employeeDetail: EmployeeType | {};
   currentListName: 'employee' | 'department' | 'role'; // 当前选中列表的名字
   departmentDetail: DepartmentType | {};
+  roleDetail: RoleType | {};
 }

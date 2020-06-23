@@ -63,3 +63,10 @@ export async function fetchDepartmentDetail(params: { id: number }) {
     params,
   });
 }
+
+export async function fetchRoleDetail(params: { id: number }) {
+  return request('/getRoleDetail', {
+    method: 'GET',
+    params,
+  });
+}

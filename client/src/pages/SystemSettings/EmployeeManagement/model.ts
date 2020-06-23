@@ -10,6 +10,7 @@ import {
   fetchAllRoleList,
   fetchEmployeeDetail,
   fetchDepartmentDetail,
+  fetchRoleDetail,
 } from './service';
 
 interface EmployeeManagementModelType {
@@ -23,6 +24,7 @@ interface EmployeeManagementModelType {
     fetchAllDepartmentList: Effect;
     fetchAllRoleList: Effect;
     fetchDepartmentDetail: Effect;
+    fetchRoleDetail: Effect;
   };
   reducers: {
     save: Reducer;
@@ -44,6 +46,7 @@ const EmployeeManagementModel: EmployeeManagementModelType = {
     employeeDetail: {},
     currentListName: 'employee',
     departmentDetail: {},
+    roleDetail: {},
   },
 
   effects: {
@@ -129,6 +132,18 @@ const EmployeeManagementModel: EmployeeManagementModelType = {
         yield put({
           type: 'save',
           payload: { roleList: response.data },
+        });
+      }
+    },
+    // 获取角色详情
+    *fetchRoleDetail({ payload }, { call, put }) {
+      const response = yield call(fetchRoleDetail, payload);
+      if (response.code === '1') {
+        yield put({
+          type: 'save',
+          payload: {
+            roleDetail: response.data,
+          },
         });
       }
     },
@@ -243,6 +258,17 @@ const EmployeeManagementModel: EmployeeManagementModelType = {
             type: 'common/fetchInitNumber',
             payload: {
               name: 'role',
+            },
+          });
+        }
+
+        if (pathname === '/system-settings/employee-management/edit-role') {
+          // 编辑角色
+          // 获取角色详情
+          dispatch({
+            type: 'fetchRoleDetail',
+            payload: {
+              id: query.id,
             },
           });
         }

@@ -3,7 +3,6 @@ import { Card, Form, Button, Row, Col, Input, Switch } from 'antd'
 import { SaveFilled, CaretLeftOutlined } from '@ant-design/icons'
 import { connect, history } from 'umi'
 import { Store } from 'rc-field-form/lib/interface'
-import moment from 'moment'
 
 import IconTitle from '@/components/IconTitle'
 import { CommonState } from '@/models/common'
@@ -19,6 +18,9 @@ const colProps = {
 interface AddOrEditRoleProps {
   employeeManagement: EmployeeManagementState;
   common: CommonState;
+  location: {
+    query: { [key: string]: any }
+  }
 }
 
 const AddOrEditRole: React.FC<AddOrEditRoleProps> = props => {
@@ -28,8 +30,11 @@ const AddOrEditRole: React.FC<AddOrEditRoleProps> = props => {
 
   // props
   const {
-    employeeManagement: { operationType },
-    common: { initNumber }
+    employeeManagement: { operationType, roleDetail },
+    common: { initNumber },
+    location: {
+      query
+    }
   } = props
 
   /** 新增时，自动填充编号 */
@@ -39,6 +44,13 @@ const AddOrEditRole: React.FC<AddOrEditRoleProps> = props => {
     }
   }, [initNumber])
 
+  /** 编辑时，表单数据回显 */
+  useEffect(() => {
+    if (operationType === 'edit') {
+      setFieldsValue(roleDetail)
+    }
+  }, [roleDetail])
+
   /** 提交表单且校验无误后调用的函数 */
   const onFinish = (values: Store) => {
     let promise
@@ -47,7 +59,16 @@ const AddOrEditRole: React.FC<AddOrEditRoleProps> = props => {
         method: 'POST',
         data: {
           ...values,
-          creator: '顾兰兰', // TODO：当前登录用户
+          creator: '顾兰兰', // TODO: 当前登录用户
+        }
+      })
+    } else if (operationType === 'edit') {
+      promise = request('/updateRole', {
+        method: 'POST',
+        data: {
+          ...values,
+          creator: '顾兰兰', // TODO: 当前登录用户
+          id: query.id
         }
       })
     }

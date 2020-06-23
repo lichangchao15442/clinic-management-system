@@ -39,5 +39,7 @@ export default (app: Application) => {
   router.get('/getRoleList', controller.roles.index); // 查询角色列表
   router.get('/getAllRoleList', controller.roles.getAllRoleList); // 查询所有的角色列表
   router.post('/addRole', controller.roles.create); // 新增角色
+  router.post('/updateRole', controller.roles.update); // 编辑角色
+  router.get('/getRoleDetail', controller.roles.show); // 获取角色详情
   router.get('/getInitNumber', controller.common.getInitNumber); // 获取某个表的最新编号+1
 };

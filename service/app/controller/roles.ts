@@ -51,7 +51,18 @@ class RolesController extends Controller {
 
   async show() {
     const ctx = this.ctx;
-    ctx.body = await ctx.model.User.findByPk(toInt(ctx.params.id));
+    const role = await ctx.model.Roles.findByPk(toInt(ctx.query.id));
+    if (!role) {
+      ctx.body = {
+        code: '0',
+        msg: '该角色不存在'
+      };
+      return;
+    }
+    ctx.body = {
+      code: '1',
+      data: role
+    }
   }
 
   async create() {
@@ -83,16 +94,37 @@ class RolesController extends Controller {
 
   async update() {
     const ctx = this.ctx;
-    const id = toInt(ctx.params.id);
-    const user = await ctx.model.User.findByPk(id);
-    if (!user) {
-      ctx.status = 404;
+    const {id, ...others } = ctx.request.body;
+    // 判断该角色是否存在
+    const role = await ctx.model.Roles.findByPk(toInt(id));
+    if (!role) {
+      ctx.body = {
+        code: '0',
+        msg: '该角色不存在'
+      }
       return;
     }
 
-    const { name, age } = ctx.request.body;
-    await user.update({ name, age });
-    ctx.body = user;
+    // 存在时，判断角色名是否重复（编辑可以与自己重复）
+    if (others.name) {
+      const hasName = role.name !== others.name && await ctx.model.Roles.findAll({
+        where: {
+          name: others.name
+        }
+      });
+      if (hasName) {
+        ctx.body = {
+          code: '0',
+          msg: '该角色名已存在'
+        };
+        return;
+      }
+    }
+    await role.update(others);
+    ctx.body = {
+      code: '1',
+      msg: '操作成功'
+    }
   }
 
   async destroy() {
