@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Radio, Switch, Button, Select } from 'antd'
+import { Radio, Switch, Button, Select, message } from 'antd'
 import { connect, history, Dispatch } from 'umi'
 import moment from 'moment'
 import { RadioChangeEvent } from 'antd/lib/radio'
@@ -217,7 +217,7 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
           dataIndex: 'status',
           title: '角色状态',
           align: 'center',
-          render: (status: number) => <Switch checked={status === 1} />
+          render: (status: number, record: RoleType) => <Switch checked={status === 1} onClick={(checked) => { onChangeStatus('role', checked, record.id) }} />
         },
         {
           title: '操作',
@@ -253,7 +253,7 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
       case 'employee':
         url = '/deleteEmployee'
         break;
-      
+
       case 'department':
         url = '/deleteDepartment'
         break;
@@ -280,13 +280,21 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
    */
   const onChangeStatus = (name: string, status: boolean, id: number) => {
     let url = ''
+    let label = ''
     switch (name) {
       case 'employee':
         url = '/updateEmployee'
+        label = '员工'
         break;
 
       case 'department':
         url = '/updateDepartment'
+        label = '科室'
+        break;
+
+      case 'role':
+        url = '/updateRole'
+        label = '角色'
         break;
 
       default:
@@ -301,6 +309,7 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
     })
     promise.then((res) => {
       if (res.code === '1') {
+        message.success(`${label}${status ? '启用' : '停用'}成功`)
         setIsRefresh(isRefresh => !isRefresh)
       }
     })
