@@ -144,6 +144,22 @@ class PatientsController extends Controller {
       return;
     };
 
+    // 删除科室前，先删除用户表中的该科室信息
+    
+    // 先找到包含该科室的用户集合
+    const includeDepartmentEmployees = await ctx.model.Employees.findAll({
+      where: {
+        department: id
+      }
+    })
+
+    // 删除用户表中的该科室信息
+    await Promise.all(includeDepartmentEmployees.map(async item => {
+      const employee = await ctx.model.Employees.findByPk(toInt(item.id));
+      await employee.update({ department: null });
+      return item
+    }))
+
     await department.destroy();
     ctx.body = {
       code: '1',

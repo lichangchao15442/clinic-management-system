@@ -15,7 +15,7 @@ class EmployeesController extends Controller {
     let where: any = {}
     Object.keys(requestQuery).map(key => {
       if (requestQuery.hasOwnProperty(key)) {
-      // console.log('requestQuery', requestQuery,key)
+      console.log('requestQuery', requestQuery,key)
         if (hasValue(requestQuery[key])) {
           // if (key === 'createdTime') {
           //   where.createdTime = {
@@ -25,9 +25,9 @@ class EmployeesController extends Controller {
           // if (key === 'admissionStatus') {
           //   where.admissionStatus = requestQuery[key]
           // }
-          // if (key === 'vipLevel') {
-          //   where.vipLevel = requestQuery[key]
-          // }
+          if (key === 'department') {
+            where.department = requestQuery[key]
+          }
           if (key === 'search') {
             where[Op.or] = [
               {
@@ -44,16 +44,22 @@ class EmployeesController extends Controller {
     // 按条件查询患者
     let allEmployees = await ctx.model.Employees.findAll(query);
 
-    const data = await  Promise.all(allEmployees.map( async item => {
+    const data = await Promise.all(allEmployees.map(async item => {
+      // 根据角色ID查询对应的角色名
       let roleNames: string[] = []
-      const roles = item.role.split(' ')
-      for (let j = 0; j < roles.length; j++) {
-        const role = await ctx.model.Roles.findByPk(toInt(roles[j]))
-        roleNames.push(role.name)
+      if (item.role) {
+        const roles = item.role.split(' ')
+        for (let j = 0; j < roles.length; j++) {
+          const role = await ctx.model.Roles.findByPk(toInt(roles[j]))
+          role && roleNames.push(role.name)
+        }
       }
+      // 根据部门ID查询对应的部门名
+      const departmentData = item.department ? await ctx.model.Departments.findByPk(item.department) : {};
       // 注意：使用解构会报错
-      let newItem = _.cloneDeep(item)
-      newItem.role = roleNames.join(' ')
+      let newItem = _.cloneDeep(item);
+      newItem.role = roleNames.join(' ');
+      newItem.department = departmentData.name;
       return newItem
     }))
 

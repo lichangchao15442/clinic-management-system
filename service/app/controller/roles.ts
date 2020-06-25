@@ -128,17 +128,38 @@ class RolesController extends Controller {
   }
 
   async destroy() {
-    // TODO: 删除角色，先删除有该角色的用户中的该角色，再删除角色
     const ctx = this.ctx;
-    const id = toInt(ctx.params.id);
-    const user = await ctx.model.User.findByPk(id);
-    if (!user) {
-      ctx.status = 404;
+    const id = toInt(ctx.request.body.id);
+    const role = await ctx.model.Roles.findByPk(id);
+    if (!role) {
+      ctx.body = {
+        code: '0',
+        msg: '该角色不存在'
+      };
       return;
     }
 
-    await user.destroy();
-    ctx.status = 200;
+    // 先找到包含该角色的所有用户
+    const includeRoleEmployees = await ctx.model.Employees.findAll({
+      where: {
+        role: {
+          [Op.like]: '%' + id + '%'
+        }
+      }
+    })
+    // 删除这些用户中的该角色ID
+    await Promise.all(includeRoleEmployees.map(async item => {
+      const employee = await ctx.model.Employees.findByPk(toInt(item.id));
+      const nowRoles = employee.role.split(' ').filter(role => toInt(role) !== id);
+      await employee.update({ role: nowRoles.length ? nowRoles.join(' ') : null });
+      return item;
+    }))
+
+    await role.destroy();
+    ctx.body = {
+      code: '1',
+      msg: '操作成功'
+    };
   }
 }
 

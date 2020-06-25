@@ -36,7 +36,10 @@ module.exports = app => {
       type: STRING(30),
       field: "own_clinic"
     },
-    department: STRING(30),
+    department: {
+      type: INTEGER,
+      content: '科室ID'
+    },
     role: STRING(255),
     password:STRING(30),
     createdTime: {
