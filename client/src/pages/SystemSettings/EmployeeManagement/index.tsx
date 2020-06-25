@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Radio, Switch, Button, Select, message } from 'antd'
 import { connect, history, Dispatch } from 'umi'
 import moment from 'moment'
 import { RadioChangeEvent } from 'antd/lib/radio'
 import { PlusCircleFilled } from '@ant-design/icons'
 
-import GlobalTable from '@/components/GlobalTable'
-import { USE_STATUSES } from '@/utils/dataDictionary'
+import { DeleteConfirmModal, GlobalTable } from '@/components'
 import request from '@/utils/request'
 import { FormItemType } from '@/typings'
 import { EmployeeManagementState, EmployeeType, DepartmentType, RoleType } from './data'
@@ -22,9 +21,6 @@ interface CurrentBasicDataType {
   columns: { [key: string]: any }[];
   filterFormItems?: FormItemType[];
 }
-
-// TODO: 1. 后台获取员工列表接口的编写；2. 面板切换的功能实现：决定了dispatchType和columns，刷新使用isRefresh
-
 
 interface EmployeeManagementProps {
   employeeManagement: EmployeeManagementState;
@@ -114,9 +110,9 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
       filterFormItems: [
         {
           label: '所属科室',
-          name: 'depaertment',
+          name: 'department',
           component: <Select style={{ width: 100 }} placeholder="请选择" allowClear={true}>
-            {departmentList.map(item => <Option key={item.id} value={item.name}>{item.name}</Option>)}
+            {departmentList.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
           </Select>
         }
       ]
@@ -224,7 +220,7 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
           align: 'center',
           render: (record: RoleType) => <div style={{ width: 100 }} className="table-operate">
             <Button type="link" onClick={() => { history.push(`/system-settings/employee-management/edit-role?id=${record.id}`) }}>编辑</Button>
-            <Button type="link">删除</Button>
+            <Button type="link" onClick={() => { onRemove('role', record.id) }}>删除</Button>
           </div>
         }
       ]
@@ -232,8 +228,12 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
   ]
 
   // useState
-  const [currentBasicData, setCurrentBasicData] = useState<CurrentBasicDataType>(radios[0])
-  const [isRefresh, setIsRefresh] = useState(false)
+  const [currentBasicData, setCurrentBasicData] = useState<CurrentBasicDataType>(radios[0]) // 当前选中面板的基础信息
+  const [isRefresh, setIsRefresh] = useState(false) // 刷新列表页面的开关
+  const [deleteConfirmModalVisible, setDeleteConfirmModalVisible] = useState(false) // 确认删除弹出框的显隐
+
+  // useRef
+  const currentConfirmData = useRef({ type: '', id: 0, content: '' }) // 当前删除数据的类型和确认删除框的内容
 
   useEffect(() => {
     // 改变当前选中的列表的数据
@@ -243,19 +243,22 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
   }, [currentListName])
 
   /**
-   * 统一的删除功能
-   * @param name 删除数据所属分类的名字
-   * @param id 删除数据的ID
+   * 统一调用删除接口的处理
    */
-  const onRemove = (name: string, id: number) => {
+  const doRemove = () => {
+    const { type, id } = currentConfirmData.current
     let url = ''
-    switch (name) {
+    switch (type) {
       case 'employee':
         url = '/deleteEmployee'
         break;
 
       case 'department':
         url = '/deleteDepartment'
+        break;
+
+      case 'role':
+        url = '/deleteRole'
         break;
 
       default:
@@ -267,9 +270,36 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
     })
     promise.then((res) => {
       if (res.code === '1') {
+        setDeleteConfirmModalVisible(false)
         setIsRefresh(isRefresh => !isRefresh)
       }
     })
+  }
+
+  /**
+   * 统一的删除功能(开启确认删除弹出框并根据删除的数据类别设置不同的内容)
+   * @param name 删除数据所属分类的名字
+   * @param id 删除数据的ID
+   */
+  const onRemove = (name: string, id: number) => {
+    setDeleteConfirmModalVisible(true)
+
+    let content = ''
+    switch (name) {
+      case 'employee':
+        content = '删除后无法恢复，确定要删除此员工信息吗？'
+        break;
+      case 'department':
+        content = '科室正在使用，确定要删除此科室吗？'
+        break;
+      case 'role':
+        content = '角色正在使用，确定要删除此角色吗？'
+        break;
+
+      default:
+        break;
+    }
+    currentConfirmData.current = { type: name, id, content }
   }
 
   /**
@@ -352,7 +382,17 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
     filterFormItems: currentBasicData.filterFormItems,
     extra
   }
-  return <GlobalTable {...globalTableProps} />
+
+  const deleteConfirmModalProps = {
+    visible: deleteConfirmModalVisible,
+    content: currentConfirmData.current.content,
+    onOk: doRemove,
+    onCancel: () => { setDeleteConfirmModalVisible(false) }
+  }
+  return <>
+    <GlobalTable {...globalTableProps} />
+    <DeleteConfirmModal {...deleteConfirmModalProps} />
+  </>
 }
 
 export default connect(({ employeeManagement }: {
