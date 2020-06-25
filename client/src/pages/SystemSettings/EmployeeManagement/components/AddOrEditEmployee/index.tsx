@@ -60,10 +60,11 @@ const AddOrEditEmployee: React.FC<AddOrEditEmployeeProps> = props => {
   // 编辑员工时，员工信息的回显
   useEffect(() => {
     if (operationType === 'edit' && !_.isEmpty(employeeDetail)) {
+      const roles = employeeDetail.role ? employeeDetail.role.split(' ').map(item => Number(item)) : []
       setFieldsValue({
         ...employeeDetail,
         address: employeeDetail.address.split(' '),
-        role: employeeDetail.role.split(' '),
+        role: roles,
       })
     }
   }, [operationType, employeeDetail])
@@ -264,7 +265,7 @@ const AddOrEditEmployee: React.FC<AddOrEditEmployeeProps> = props => {
         <Col {...colProps}>
           <Form.Item label="所属科室" name="department" rules={[{ required: true, message: '请选择所属科室' }]}>
             <Select placeholder="请选择">
-              {departmentList.map(item => <Option key={item.id} value={item.name}>{item.name}</Option>)}
+              {departmentList.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
             </Select>
           </Form.Item>
         </Col>
