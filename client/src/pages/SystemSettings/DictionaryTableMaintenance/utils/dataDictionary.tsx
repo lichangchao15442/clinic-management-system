@@ -70,7 +70,7 @@ const ownParams = [
       {
         label: '主诉分类',
         name: 'type',
-        component: <Select style={{ width: 100 }} allowClear={true}>
+        component: <Select style={{ width: 100 }} allowClear={true} placeholder="请选择">
           {CHIEF_COMPLAINT_TYPES.map(item => <Option key={item.value} value={item.value}>{item.label}</Option>)}
         </Select>
       }
@@ -232,7 +232,7 @@ const ownParams = [
       {
         label: '处方类别',
         name: 'type',
-        component: <Select style={{ width: 120 }} allowClear={true}>
+        component: <Select style={{ width: 120 }} allowClear={true} placeholder="请选择">
           {PRESCRIPTION_TYPES.map(item => <Option key={item.value} value={item.value}>{item.label}</Option>)}
         </Select>
       }
@@ -274,7 +274,7 @@ const ownParams = [
       {
         label: '处方类别',
         name: 'type',
-        component: <Select style={{ width: 120 }} allowClear={true}>
+        component: <Select style={{ width: 120 }} allowClear={true} placeholder="请选择">
           {PRESCRIPTION_TYPES.map(item => <Option key={item.value} value={item.value}>{item.label}</Option>)}
         </Select>
       }
