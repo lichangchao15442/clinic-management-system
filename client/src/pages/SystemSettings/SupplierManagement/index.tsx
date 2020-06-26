@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { connect, history } from 'umi'
 import moment from 'moment'
 import { Button, message } from 'antd'
@@ -7,6 +7,7 @@ import { PlusCircleFilled } from '@ant-design/icons'
 import GlobalTable from '@/components/GlobalTable'
 import { USE_STATUSES } from '@/utils/dataDictionary'
 import request from '@/utils/request'
+import { DeleteConfirmModal } from '@/components'
 import { SupplierManagementState, SupplierType } from './data'
 
 
@@ -19,19 +20,31 @@ const SupplierManagement: React.FC<SupplierManagementProps> = props => {
   const { supplierManagement: { supplierList, total } } = props
 
   // useState
-  const [isRefresh, setIsRefresh] = useState(false)
+  const [isRefresh, setIsRefresh] = useState(false) // 刷新当前列表的开关
+  const [deleteConfirmModalVisible, setDeleteConfirmModalVisible] = useState(false) // 删除确认弹窗框的显隐
 
-  // 删除某条供应商数据
+  // useRef
+  const currentSupplierId = useRef<number | null>(null) // 当前操作的供应商ID
+
+  /** 显示删除确认框 */
   const onRemoveSupplier = (id: number) => {
+    setDeleteConfirmModalVisible(true)
+    currentSupplierId.current = id
+  }
+
+  /** 删除某条供应商数据的请求 */
+  const fetchRemoveSupplier = () => {
     const promise = request('/deleteSupplier', {
       method: 'DELETE',
       data: {
-        id
+        id: currentSupplierId.current
       }
     })
     promise.then((res) => {
       if (res.code === '1') {
-        message.success('操作成功')
+        message.success('供应商删除成功！')
+        // 隐藏删除确认框
+        setDeleteConfirmModalVisible(false)
         // 刷新列表
         setIsRefresh(!isRefresh)
       }
@@ -106,7 +119,17 @@ const SupplierManagement: React.FC<SupplierManagementProps> = props => {
     extra,
     isRefresh
   }
-  return <GlobalTable {...globalTableProps} />
+
+  const deleteConfirmModalProps = {
+    visible: deleteConfirmModalVisible,
+    content: '确定要删除此供应商信息吗？',
+    onOk: fetchRemoveSupplier,
+    onCancel: () => { setDeleteConfirmModalVisible(false) }
+  }
+  return <>
+    <GlobalTable {...globalTableProps} />
+    <DeleteConfirmModal {...deleteConfirmModalProps} />
+  </>
 }
 
 export default connect(({ supplierManagement }: {
