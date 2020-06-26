@@ -157,6 +157,11 @@ const GlobalTable: React.FC<GlobalTableProps> = ({
   // 搜索
   const doSearch = (values: Store) => {
     setQuery(doParseQueryValue(values))
+    // 从第一页开始展示数据
+    setPagination({
+      ...pagination,
+      pageNum: 1
+    })
   }
 
 
