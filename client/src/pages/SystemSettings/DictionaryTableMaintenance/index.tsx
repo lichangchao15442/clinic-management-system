@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Radio, Button } from 'antd'
+import { Radio, Button, message } from 'antd'
 import { RadioChangeEvent } from 'antd/lib/radio'
 import _ from 'lodash'
 import { connect } from 'umi'
@@ -80,9 +80,12 @@ const DictionaryTableMaintenance: React.FC<DictionaryTableMaintenanceProps> = pr
       }
     })
     promise.then((res) => {
-      if (res.code === '1') { // 操作成功
-        // 刷新列表
+      if (res.code === '1') {
+        // 操作成功提示
+        message.success('提交成功！')
+        // 隐藏删除确认框
         setDeleteConfirmModalVisible(false)
+        // 刷新列表
         setIsRefresh(isRefresh => !isRefresh)
       }
     })
