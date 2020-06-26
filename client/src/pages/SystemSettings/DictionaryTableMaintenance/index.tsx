@@ -12,6 +12,7 @@ import GlobalTable from '@/components/GlobalTable'
 import { DICTIONARY_TYPES } from '@/utils/dataDictionary'
 import request from '@/utils/request'
 import { FormItemType } from '@/typings'
+import { DeleteConfirmModal } from '@/components'
 import { ownParams } from './utils/dataDictionary'
 import { DictionaryTableMaintenanceState, DictionaryType } from './data'
 import { AddOrEditModal } from './components'
@@ -49,10 +50,11 @@ const DictionaryTableMaintenance: React.FC<DictionaryTableMaintenanceProps> = pr
   const [modalProps, setModalProps] = useState<{ title: string; formItems: FormItemType[] }>({ title: ownParams[0].name || '', formItems: ownParams[0].modalFormItems || [] }) // modal的数据，包括标题的表单项集合
   const [isRefresh, setIsRefresh] = useState(false) // 是否刷新当前列表
   const [modalType, setModalType] = useState<'add' | 'edit'>('add') // modal的操作类型
+  const [deleteConfirmModalVisible, setDeleteConfirmModalVisible] = useState(false) // 删除确认框的显隐
 
   // useRef
   const modalForm = useRef<FormInstance>() // modal的form
-  const currentDictionaryId = useRef<number>() // 当前编辑的数据的ID
+  const currentDictionaryId = useRef<number>() // 当前操作的数据的ID
 
   // console.log('isRefresh', isRefresh)
 
@@ -69,21 +71,27 @@ const DictionaryTableMaintenance: React.FC<DictionaryTableMaintenanceProps> = pr
     setModalVisible(true)
   }
 
-  // 删除某条数字典表数据
-  const onRemoveDictionary = (id: number) => {
+  /** 删除某条数字典表数据 */
+  const fetchRemoveDictionary = () => {
     const promise = request('/deleteDictionary', {
       method: 'DELETE',
       data: {
-        id
+        id: currentDictionaryId.current
       }
     })
     promise.then((res) => {
       if (res.code === '1') { // 操作成功
         // 刷新列表
-        console.log('onRemoveDictionary-isRefresh', isRefresh)
+        setDeleteConfirmModalVisible(false)
         setIsRefresh(isRefresh => !isRefresh)
       }
     })
+  }
+
+  /** 显示删除确认框 */
+  const onRemoveDictionary = (id: number) => {
+    setDeleteConfirmModalVisible(true)
+    currentDictionaryId.current = id
   }
 
   // 编辑某条字典表数据
@@ -173,7 +181,7 @@ const DictionaryTableMaintenance: React.FC<DictionaryTableMaintenanceProps> = pr
     }
   }
 
-  // 点击modal确定按钮触发的回调
+  // 点击新增-modal确定按钮触发的回调
   const doOk = (values: Store) => {
     console.log('doOk', values)
     const currentDictionaryType = titleField.find(item => item.key === 'dictionaryType')?.value
@@ -217,7 +225,7 @@ const DictionaryTableMaintenance: React.FC<DictionaryTableMaintenanceProps> = pr
     }
   }
 
-  // 点击modal取消按钮触发的回调
+  // 点击新增-modal取消按钮触发的回调
   const doCancel = () => {
     setModalVisible(false)
   }
@@ -267,7 +275,7 @@ const DictionaryTableMaintenance: React.FC<DictionaryTableMaintenanceProps> = pr
     >新增</Button>
   </div>
 
-  const GlobalTableProps = {
+  const globalTableProps = {
     title,
     dispatchType: 'dictionaryTableMaintenance/fetchDictionaryList',
     // columns: basicColumns,
@@ -282,7 +290,7 @@ const DictionaryTableMaintenance: React.FC<DictionaryTableMaintenanceProps> = pr
     isRefresh
   }
 
-  const AddOrEditModalprops = {
+  const addOrEditModalprops = {
     visible: modalVisible,
     modalProps,
     doOk,
@@ -291,9 +299,17 @@ const DictionaryTableMaintenance: React.FC<DictionaryTableMaintenanceProps> = pr
     getForm
   }
 
+  const deleteConfirmModalProps = {
+    visible: deleteConfirmModalVisible,
+    content: '信息删除后无法恢复，确定删除吗？',
+    onOk: fetchRemoveDictionary,
+    onCancel: () => { setDeleteConfirmModalVisible(false) }
+  }
+
   return <>
-    <GlobalTable {...GlobalTableProps} />
-    <AddOrEditModal {...AddOrEditModalprops} />
+    <GlobalTable {...globalTableProps} />
+    <AddOrEditModal {...addOrEditModalprops} />
+    <DeleteConfirmModal {...deleteConfirmModalProps} />
   </>
 }
 
