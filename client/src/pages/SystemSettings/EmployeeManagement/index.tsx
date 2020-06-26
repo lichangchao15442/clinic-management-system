@@ -248,17 +248,21 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
   const doRemove = () => {
     const { type, id } = currentConfirmData.current
     let url = ''
+    let label = ''
     switch (type) {
       case 'employee':
         url = '/deleteEmployee'
+        label = '员工'
         break;
 
       case 'department':
         url = '/deleteDepartment'
+        label = '科室'
         break;
 
       case 'role':
         url = '/deleteRole'
+        label = '角色'
         break;
 
       default:
@@ -270,7 +274,11 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
     })
     promise.then((res) => {
       if (res.code === '1') {
+        // 操作成功提示
+        message.success(`${label}删除成功！`)
+        // 删除确认框隐藏
         setDeleteConfirmModalVisible(false)
+        // 刷新当前列表
         setIsRefresh(isRefresh => !isRefresh)
       }
     })
