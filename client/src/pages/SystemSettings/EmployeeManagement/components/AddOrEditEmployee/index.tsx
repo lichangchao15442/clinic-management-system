@@ -60,11 +60,8 @@ const AddOrEditEmployee: React.FC<AddOrEditEmployeeProps> = props => {
   // 编辑员工时，员工信息的回显
   useEffect(() => {
     if (operationType === 'edit' && !_.isEmpty(employeeDetail)) {
-      const roles = employeeDetail.role ? employeeDetail.role.split(' ').map(item => Number(item)) : []
       setFieldsValue({
         ...employeeDetail,
-        address: employeeDetail.address.split(' '),
-        role: roles,
       })
     }
   }, [operationType, employeeDetail])

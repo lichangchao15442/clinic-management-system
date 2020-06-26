@@ -84,9 +84,14 @@ class EmployeesController extends Controller {
       }
       return 
     }
+    // 将角色转为数组
+    const roles = emplyoee.role ? emplyoee.role.split(' ').map(role => toInt(role)) : [];
+    const address = emplyoee.address ? emplyoee.address.split(' ') : [];
+    emplyoee.role = roles
+    emplyoee.address = address
     ctx.body = {
       code: '1',
-      data:emplyoee
+      data: emplyoee
     }
   }
 
