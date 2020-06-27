@@ -37,9 +37,9 @@ const GlobalTable: React.FC<GlobalTableProps> = ({
   dataSource = [],
   total,
   dispatch,
-  dispatchType,
+  dispatchType = '',
   loading,
-  filterFormItems,
+  filterFormItems = [],
   searchPlaceholder,
   extra,
   title,
@@ -55,7 +55,7 @@ const GlobalTable: React.FC<GlobalTableProps> = ({
   // useRef
   const filterForm = useRef<FormInstance>() // filterForma的form
 
-  console.log('GlobalTable',dispatchType)
+  console.log('GlobalTable', dispatchType)
 
   // 获取FilterForm的form
   const getForm = (form: FormInstance) => {
@@ -64,12 +64,13 @@ const GlobalTable: React.FC<GlobalTableProps> = ({
 
   // 为数据源增加序号
   useEffect(() => {
-    console.log('dataSource')
-    const newData = dataSource.map((item: any, index: number) => ({
-      ...item,
-      key: (pagination.pageNum - 1) * pagination.pageSize + index + 1
-    }))
-    setData(newData)
+    if (dataSource.length) {
+      const newData = dataSource.map((item: any, index: number) => ({
+        ...item,
+        key: (pagination.pageNum - 1) * pagination.pageSize + index + 1
+      }))
+      setData(newData)
+    }
   }, [dataSource])
 
   // tab面板切换(需要靠titleField作为参数)时触发
@@ -111,7 +112,7 @@ const GlobalTable: React.FC<GlobalTableProps> = ({
         newQuery[item.key] = item.value
         return item
       })
-      dispatch({
+      dispatchType && dispatch({
         type: dispatchType,
         payload: {
           query: newQuery,
@@ -119,7 +120,7 @@ const GlobalTable: React.FC<GlobalTableProps> = ({
         }
       })
     } else {
-      dispatch({
+      dispatchType && dispatch({
         type: dispatchType,
         payload: {
           query,
