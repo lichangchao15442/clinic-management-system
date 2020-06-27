@@ -65,7 +65,7 @@ const AddOrEditModal: React.FC<AddOrEditModalProps> = ({
           key={item.name}
           label={item.label}
           name={item.name}
-          rules={[{ required: true, message: "必填" }]}
+          rules={[{ required: true, message: "请填写信息" }]}
         >
           {item.component}
         </Form.Item>)}
