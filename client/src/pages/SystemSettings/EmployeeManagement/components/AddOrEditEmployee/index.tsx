@@ -5,7 +5,7 @@ import { SaveFilled, CaretLeftOutlined } from '@ant-design/icons'
 import { Store } from 'rc-field-form/lib/interface'
 import _ from 'lodash'
 
-import IconTitle from '@/components/IconTitle'
+import { IconTitle, SaveAndGoBackButtons } from '@/components'
 import { AGE_UNITS, GENDERS } from '@/utils/dataDictionary'
 import { validatePhoneFormat, validateIDNumberFormat, validatePasswordFormat } from '@/utils/utils'
 import cities from '@/utils/city'
@@ -113,17 +113,7 @@ const AddOrEditEmployee: React.FC<AddOrEditEmployeeProps> = props => {
       className="card-no-border"
       title={<IconTitle title={`${operationType === 'add' ? '新增' : '编辑'}员工信息`} />
       }
-      extra={<div>
-        <Button type="primary" icon={<SaveFilled />} htmlType="submit">保存</Button>
-        <Button
-          style={{ marginLeft: 20 }}
-          ghost
-          type="primary"
-          icon={<CaretLeftOutlined
-          />}
-          onClick={() => { history.goBack() }}
-        >返回</Button>
-      </div>}
+      extra={<SaveAndGoBackButtons />}
     >
       <Row gutter={24}>
         <Col {...colProps}>

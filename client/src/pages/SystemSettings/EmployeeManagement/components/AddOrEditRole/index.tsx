@@ -4,7 +4,7 @@ import { SaveFilled, CaretLeftOutlined } from '@ant-design/icons'
 import { connect, history } from 'umi'
 import { Store } from 'rc-field-form/lib/interface'
 
-import IconTitle from '@/components/IconTitle'
+import { IconTitle, SaveAndGoBackButtons } from '@/components'
 import { CommonState } from '@/models/common'
 import request from '@/utils/request'
 import { EmployeeManagementState } from '../../data'
@@ -89,16 +89,7 @@ const AddOrEditRole: React.FC<AddOrEditRoleProps> = props => {
     <Card
       className="card-no-border"
       title={<IconTitle title={`${operationType === 'add' ? '新增' : '编辑'}角色信息`} />}
-      extra={<div>
-        <Button type="primary" icon={<SaveFilled />} htmlType="submit" >保存</Button>
-        <Button
-          style={{ marginLeft: 20 }}
-          ghost
-          type="primary"
-          icon={<CaretLeftOutlined />}
-          onClick={() => { history.goBack() }}
-        >返回</Button>
-      </div>}
+      extra={<SaveAndGoBackButtons />}
     >
       <Row gutter={24}>
         <Col {...colProps}>
