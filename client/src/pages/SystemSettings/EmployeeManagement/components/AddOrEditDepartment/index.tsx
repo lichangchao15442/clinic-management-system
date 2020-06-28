@@ -30,8 +30,8 @@ const AddOrEditDepartment: React.FC<AddOrEditDepartmentprops> = props => {
   const { setFieldsValue } = form
   // props
   const {
-    employeeManagement: { operationType, departmentDetail },
-    common: { initNumber },
+    employeeManagement: { departmentDetail },
+    common: { initNumber, operationType },
     location: { query }
   } = props
 

@@ -30,8 +30,8 @@ const AddOrEditRole: React.FC<AddOrEditRoleProps> = props => {
 
   // props
   const {
-    employeeManagement: { operationType, roleDetail },
-    common: { initNumber },
+    employeeManagement: { roleDetail },
+    common: { initNumber, operationType },
     location: {
       query
     }

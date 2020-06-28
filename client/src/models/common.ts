@@ -3,7 +3,8 @@ import { Effect, Reducer } from 'umi';
 import { getInitNumber } from '@/services/common';
 
 export interface CommonState {
-  initNumber: number | null;
+  initNumber: number | null; // 表单为添加类型自动填充的编号
+  operationType: 'add' | 'edit'; // 新增/编辑共用表单的当前操作类型
 }
 
 interface ModelType {
@@ -22,6 +23,7 @@ const Model: ModelType = {
 
   state: {
     initNumber: null,
+    operationType: 'add',
   },
 
   effects: {

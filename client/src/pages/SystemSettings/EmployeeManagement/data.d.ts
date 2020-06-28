@@ -47,7 +47,6 @@ export interface EmployeeManagementState {
   list: EmployeeType[] | DepartmentType[] | RoleType[];
   total: 0;
   departmentList: DepartmentType[];
-  operationType: 'add' | 'edit'; // 新增/编辑共用页面的当前操作类型
   roleList: RoleType[];
   employeeDetail: EmployeeType | {};
   currentListName: 'employee' | 'department' | 'role'; // 当前选中列表的名字

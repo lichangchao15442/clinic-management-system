@@ -76,7 +76,7 @@ const filterFormItems = [
   {
     label: '项目状态',
     name: 'status',
-    component: <Select style={{ width: 80 }} allowClear={true}>
+    component: <Select style={{ width: 100 }} allowClear={true} placeholder="请选择">
       {USE_STATUSES.map(item => <Option key={item.value} value={item.value}>{item.label}</Option>)}
     </Select>
   }

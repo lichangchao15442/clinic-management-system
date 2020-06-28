@@ -37,7 +37,6 @@ const CheckProjectSettingModel: CheckProjectSettingModelType = {
     unitList: [],
     projectTypeList: [],
     invoiceItemList: [],
-    operationType: 'add',
     checkProjectDetail: null,
   },
 
@@ -157,7 +156,7 @@ const CheckProjectSettingModel: CheckProjectSettingModelType = {
             });
           }
           dispatch({
-            type: 'save',
+            type: 'common/save',
             payload: { operationType },
           });
         }

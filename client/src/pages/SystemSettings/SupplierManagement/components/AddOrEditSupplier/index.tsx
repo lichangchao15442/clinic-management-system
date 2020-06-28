@@ -8,6 +8,7 @@ import { SaveAndGoBackButtons, IconTitle } from '@/components'
 import { USE_STATUSES } from '@/utils/dataDictionary'
 import { validatePhoneFormat } from '@/utils/utils'
 import request from '@/utils/request'
+import { CommonState } from '@/models/common'
 import { SupplierManagementState } from '../../data'
 
 const { Option } = Select
@@ -19,6 +20,7 @@ const colProps = {
 
 interface AddOrEditSupplierProps {
   supplierManagement: SupplierManagementState;
+  common: CommonState;
   location: {
     query: {
       [key: string]: any
@@ -32,7 +34,8 @@ const AddOrEditSupplier: React.FC<AddOrEditSupplierProps> = props => {
 
   // props
   const {
-    supplierManagement: { supplierNumber, operationType, supplierDetail },
+    supplierManagement: { supplierNumber, supplierDetail },
+    common: { operationType },
     location: { query = {} }
   } = props
 
@@ -154,6 +157,7 @@ const AddOrEditSupplier: React.FC<AddOrEditSupplierProps> = props => {
   </Form>
 }
 
-export default connect(({ supplierManagement }: {
-  supplierManagement: SupplierManagementState
-}) => ({ supplierManagement }))(AddOrEditSupplier)
+export default connect(({ supplierManagement, common }: {
+  supplierManagement: SupplierManagementState;
+  common: CommonState;
+}) => ({ supplierManagement, common }))(AddOrEditSupplier)

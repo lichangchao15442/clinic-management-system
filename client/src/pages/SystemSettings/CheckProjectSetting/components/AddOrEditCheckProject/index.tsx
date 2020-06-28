@@ -37,10 +37,9 @@ const AddOrEditCheckProject: React.FC<AddOrEditCheckProjectProps> = props => {
       unitList,
       projectTypeList,
       invoiceItemList,
-      operationType,
       checkProjectDetail = {}
     },
-    common: { initNumber },
+    common: { initNumber, operationType },
     location: { query = {} }
   } = props
 

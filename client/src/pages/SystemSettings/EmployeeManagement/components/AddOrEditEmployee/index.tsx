@@ -39,12 +39,11 @@ const AddOrEditEmployee: React.FC<AddOrEditEmployeeProps> = props => {
   const {
     employeeManagement:
     {
-      operationType,
       departmentList,
       roleList,
       employeeDetail
     },
-    common: { initNumber },
+    common: { initNumber, operationType },
     location: {
       query = {}
     }

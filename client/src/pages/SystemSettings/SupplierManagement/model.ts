@@ -31,8 +31,7 @@ const SupplierManagementModel: SupplierManagementModelType = {
     supplierList: [],
     total: 0,
     supplierNumber: null,
-    operationType: 'add',
-    supplierDetail:{}
+    supplierDetail: {},
   },
 
   effects: {
@@ -90,7 +89,7 @@ const SupplierManagementModel: SupplierManagementModelType = {
         if (pathname === '/system-settings/supplier-management/add') {
           // 修改当前新增/编辑共用页面的操作类型为add
           dispatch({
-            type: 'save',
+            type: 'common/save',
             payload: {
               operationType: 'add',
             },
@@ -102,7 +101,7 @@ const SupplierManagementModel: SupplierManagementModelType = {
         } else if (pathname === '/system-settings/supplier-management/edit') {
           // 修改当前新增/编辑共用页面的操作类型为edit
           dispatch({
-            type: 'save',
+            type: 'common/save',
             payload: {
               operationType: 'edit',
             },

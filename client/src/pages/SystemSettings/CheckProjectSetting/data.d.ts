@@ -21,6 +21,5 @@ export interface CheckProjectSettingStateType {
   unitList: string[];
   projectTypeList: string[];
   invoiceItemList: string[];
-  operationType: 'add' | 'edit'; // 新增/编辑共用页面的当前操作类型
   checkProjectDetail: CheckProjectType | null;
 }

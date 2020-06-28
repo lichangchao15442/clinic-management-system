@@ -41,7 +41,6 @@ const EmployeeManagementModel: EmployeeManagementModelType = {
     list: [],
     total: 0,
     departmentList: [],
-    operationType: 'add',
     roleList: [],
     employeeDetail: {},
     currentListName: 'employee',
@@ -172,7 +171,7 @@ const EmployeeManagementModel: EmployeeManagementModelType = {
         if (pathname.includes('/system-settings/employee-management/add')) {
           // 改变新增与编辑共用页面的操作类型为add
           dispatch({
-            type: 'save',
+            type: 'common/save',
             payload: {
               operationType: 'add',
             },
@@ -182,7 +181,7 @@ const EmployeeManagementModel: EmployeeManagementModelType = {
         ) {
           // 改变新增与编辑共用页面的操作类型为add
           dispatch({
-            type: 'save',
+            type: 'common/save',
             payload: {
               operationType: 'edit',
             },
