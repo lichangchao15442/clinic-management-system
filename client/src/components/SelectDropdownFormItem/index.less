@@ -1,0 +1,39 @@
+.card {
+  :global {
+    .ant-card-head-title {
+      color: @primary-color;
+    }
+  }
+}
+
+.menu {
+  div:last-child > div > div {
+    flex-direction: row !important;
+    flex-wrap: wrap;
+    // justify-content: space-around;
+    :global {
+      .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+        background-color: #f5f5f5;
+      }
+      .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+        background-color: @primary-color;
+        color: #fff;
+      }
+      .ant-select-item {
+        border: 1px solid @primary-color;
+        background-color: #fff;
+        color: @primary-color;
+        padding: 0 10px;
+        border-radius: 6px;
+        min-height: 24px;
+        margin: 0 10px 10px 0;
+      }
+      .ant-select-item-option {
+        align-items: center;
+      }
+      .ant-select-item-option-state {
+        display: none;
+      }
+    }
+  }
+}
