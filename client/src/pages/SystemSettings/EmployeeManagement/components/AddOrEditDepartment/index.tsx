@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, Form, Button, Row, Col, Input, Switch } from 'antd'
 import { SaveFilled, CaretLeftOutlined } from '@ant-design/icons'
 import { history, connect } from 'umi'
@@ -28,12 +28,16 @@ const AddOrEditDepartment: React.FC<AddOrEditDepartmentprops> = props => {
   // form
   const [form] = Form.useForm()
   const { setFieldsValue } = form
+
   // props
   const {
     employeeManagement: { departmentDetail },
     common: { initNumber, operationType },
     location: { query }
   } = props
+
+  // useState
+  const [saveLoading, setSaveLoading] = useState(false) // 保存按钮的加载状态
 
   /** 自动填充编号 */
   useEffect(() => {
@@ -73,7 +77,7 @@ const AddOrEditDepartment: React.FC<AddOrEditDepartmentprops> = props => {
       })
     }
     promise && promise.then(res => {
-      console.log('res', res)
+      setSaveLoading(true)
       if (res.code === '1') {
         history.push('/system-settings/employee-management')
       }
@@ -92,7 +96,7 @@ const AddOrEditDepartment: React.FC<AddOrEditDepartmentprops> = props => {
     <Card
       className="card-no-border"
       title={<IconTitle title={`${operationType === 'add' ? '新增' : '编辑'}科室信息`} />}
-      extra={<SaveAndGoBackButtons />}
+      extra={<SaveAndGoBackButtons loading={saveLoading} />}
     >
       <Row gutter={24}>
         <Col {...colProps}>

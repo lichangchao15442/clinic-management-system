@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, Form, Button, Row, Col, Input, Switch } from 'antd'
 import { SaveFilled, CaretLeftOutlined } from '@ant-design/icons'
 import { connect, history } from 'umi'
@@ -37,6 +37,9 @@ const AddOrEditRole: React.FC<AddOrEditRoleProps> = props => {
     }
   } = props
 
+  // useState
+  const [saveLoading, setSaveLoading] = useState(false) // 保存按钮的加载状态
+
   /** 新增时，自动填充编号 */
   useEffect(() => {
     if (operationType === 'add') {
@@ -73,6 +76,7 @@ const AddOrEditRole: React.FC<AddOrEditRoleProps> = props => {
       })
     }
     promise && promise.then(res => {
+      setSaveLoading(true)
       if (res.code === '1') {
         history.push('/system-settings/employee-management')
       }
@@ -89,7 +93,7 @@ const AddOrEditRole: React.FC<AddOrEditRoleProps> = props => {
     <Card
       className="card-no-border"
       title={<IconTitle title={`${operationType === 'add' ? '新增' : '编辑'}角色信息`} />}
-      extra={<SaveAndGoBackButtons />}
+      extra={<SaveAndGoBackButtons loading={saveLoading} />}
     >
       <Row gutter={24}>
         <Col {...colProps}>

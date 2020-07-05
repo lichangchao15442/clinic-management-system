@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect, history } from 'umi'
 import { Card, Form, Button, Row, Col, Input, Select, Cascader, Switch, message } from 'antd'
 import { SaveFilled, CaretLeftOutlined } from '@ant-design/icons'
@@ -35,6 +35,7 @@ const AddOrEditEmployee: React.FC<AddOrEditEmployeeProps> = props => {
   // form
   const [form] = Form.useForm()
   const { setFieldsValue } = form
+
   // props
   const {
     employeeManagement:
@@ -48,6 +49,9 @@ const AddOrEditEmployee: React.FC<AddOrEditEmployeeProps> = props => {
       query = {}
     }
   } = props
+
+  // useState
+  const [saveLoading, setSaveLoading] = useState(false) // 保存按钮的加载状态
 
   // 新增员工时，自动填充员工编号
   useEffect(() => {
@@ -91,6 +95,7 @@ const AddOrEditEmployee: React.FC<AddOrEditEmployeeProps> = props => {
       })
     }
     promise && promise.then((res) => {
+      setSaveLoading(true)
       if (res.code === '1') { // 新增成功
         message.success('操作成功')
         history.push('/system-settings/employee-management')
@@ -112,7 +117,7 @@ const AddOrEditEmployee: React.FC<AddOrEditEmployeeProps> = props => {
       className="card-no-border"
       title={<IconTitle title={`${operationType === 'add' ? '新增' : '编辑'}员工信息`} />
       }
-      extra={<SaveAndGoBackButtons />}
+      extra={<SaveAndGoBackButtons loading={saveLoading} />}
     >
       <Row gutter={24}>
         <Col {...colProps}>

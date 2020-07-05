@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, Button, Form, Row, Col, Input, Select, Radio, message } from 'antd'
 import { SaveFilled, CaretLeftOutlined } from '@ant-design/icons'
 import { Store } from 'rc-field-form/lib/interface'
@@ -29,6 +29,7 @@ interface AddOrEditSupplierProps {
 }
 
 const AddOrEditSupplier: React.FC<AddOrEditSupplierProps> = props => {
+  // form
   const [form] = Form.useForm()
   const { setFieldsValue } = form
 
@@ -38,6 +39,9 @@ const AddOrEditSupplier: React.FC<AddOrEditSupplierProps> = props => {
     common: { operationType },
     location: { query = {} }
   } = props
+
+  // useState
+  const [saveLoading, setSaveLoading] = useState(false) // 保存按钮的加载状态
 
   // 新增时，为供应商编号表单自动项填充值
   useEffect(() => {
@@ -71,6 +75,7 @@ const AddOrEditSupplier: React.FC<AddOrEditSupplierProps> = props => {
       })
     }
     promise?.then((res) => {
+      setSaveLoading(true)
       if (res.code === '1') {
         message.success('操作成功')
         history.push('/system-settings/supplier-management')
@@ -89,7 +94,7 @@ const AddOrEditSupplier: React.FC<AddOrEditSupplierProps> = props => {
       className="card-no-border"
       title={<IconTitle title={`${operationType === 'add' ? '新增' : '编辑'}供应商`} />}
       extra={
-        <SaveAndGoBackButtons />
+        <SaveAndGoBackButtons loading={saveLoading} />
       }
     >
       <Row gutter={24}>
