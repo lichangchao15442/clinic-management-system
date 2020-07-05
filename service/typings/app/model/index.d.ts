@@ -6,6 +6,7 @@ import ExportCheckProjects from '../../../app/model/checkProjects';
 import ExportDepartments from '../../../app/model/departments';
 import ExportDictionary from '../../../app/model/dictionary';
 import ExportEmployees from '../../../app/model/employees';
+import ExportMedicalRecordTemplates from '../../../app/model/medicalRecordTemplates';
 import ExportOrders from '../../../app/model/orders';
 import ExportPatients from '../../../app/model/patients';
 import ExportRoles from '../../../app/model/roles';
@@ -17,6 +18,7 @@ declare module 'egg' {
     Departments: ReturnType<typeof ExportDepartments>;
     Dictionary: ReturnType<typeof ExportDictionary>;
     Employees: ReturnType<typeof ExportEmployees>;
+    MedicalRecordTemplates: ReturnType<typeof ExportMedicalRecordTemplates>;
     Orders: ReturnType<typeof ExportOrders>;
     Patients: ReturnType<typeof ExportPatients>;
     Roles: ReturnType<typeof ExportRoles>;

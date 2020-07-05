@@ -2,32 +2,7 @@ const Controller = require('egg').Controller;
 
 const Op = require('sequelize').Op
 
-const  toInt = (str) => {
-  if (typeof str === 'number') return str;
-  if (!str) return str;
-  return parseInt(str, 10) || 0;
-}
-
-
-// 判断某个属性是否有值（为undefined、null、‘’)
-const hasValue = (value) => {
-  let isEmpty
-  switch (value) {
-    case undefined:
-      isEmpty = true
-      break;
-    case null:
-      isEmpty = true
-      break;
-    case '':
-      isEmpty = true
-      break;
-    default:
-      isEmpty = false
-      break;
-  }
-  return !isEmpty
-}
+import {toInt, hasValue} from '../service/utils'
 
 class OrdersController extends Controller {
 
@@ -232,6 +207,67 @@ class OrdersController extends Controller {
       data
     }
     
+  }
+
+  /** getAllDictionary */
+  async getAllDictionary() {
+    const ctx = this.ctx;
+    const dictionaryModel = ctx.model.Dictionary
+    
+    const findAll = async (dictionaryType:number, subDictionaryType:number, type?:number) => {
+      const where: {[key:string]:any} = {
+        dictionaryType,
+        subDictionaryType
+      }
+      if (hasValue(type)) {
+        where.type = type
+      }
+      return await dictionaryModel.findAll({where});
+    }
+    // 诊断列表
+    const diagnosisList = await findAll(1, 1);
+    // 常用症状列表
+    const commonSymptomsList = await findAll(1, 3, 1);
+    // 常用时间列表
+    const commonTimeList = await findAll(1, 3, 2);
+    // 常用标点
+    const commonPunctuationList = await findAll(1, 3, 3);
+    // 常用词汇
+    const commonVocabulary = await findAll(1, 3, 4);
+    // 现病史列表
+    const currentMedicalHistoryList = await findAll(1, 4);
+    // 既往史列表
+    const pastHistoryList = await findAll(1, 5);
+    // 过敏史列表
+    const allergyHistoryList = await findAll(1, 6);
+    // 个人史列表
+    const personalHistoryList = await findAll(1, 7);
+    // 辅助检查列表
+    const auxiliaryExaminationList = await findAll(1, 8);
+    // 治疗意见
+    const treatmentAdviceList = await findAll(1, 9);
+    // 医嘱
+    const medicalAdviceList = await findAll(1, 2);
+
+    ctx.body = {
+      code: '1',
+      data: {
+        diagnosisList,
+        chiefComplaintData: {
+          commonSymptomsList,
+          commonTimeList,
+          commonPunctuationList,
+          commonVocabulary
+        },
+        currentMedicalHistoryList,
+        pastHistoryList,
+        allergyHistoryList,
+        personalHistoryList,
+        auxiliaryExaminationList,
+        treatmentAdviceList,
+        medicalAdviceList
+      }
+    }
   }
 }
 

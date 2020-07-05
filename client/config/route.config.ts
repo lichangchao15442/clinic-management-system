@@ -133,6 +133,26 @@ export default [
           },
         ],
       },
+      {
+        name: '模版维护',
+        path: '/system-settings/template-maintenance',
+        menu: {
+          hideChildren: true,
+        },
+        routes: [
+          {
+            name: '模版维护',
+            path: '/system-settings/template-maintenance',
+            component: 'SystemSettings/TemplateMaintenance',
+          },
+          {
+            name: '模版维护',
+            path: '/system-settings/template-maintenance/add-medical_record',
+            component:
+              'SystemSettings/TemplateMaintenance/components/AddOrEditMedicalRecordTemplate',
+          },
+        ],
+      },
     ],
   },
 ];

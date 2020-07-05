@@ -6,3 +6,9 @@ export async function getInitNumber(params: { name: string }) {
     params,
   });
 }
+
+export async function getAllDictionary() {
+  return request('/dictionary/getAllDictionary', {
+    method: 'GET',
+  });
+}

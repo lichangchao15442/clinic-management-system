@@ -304,6 +304,30 @@ const AGE_UNITS = [
   },
 ];
 
+// 模版类型
+const TEMPLATES_TYPES = [
+  {
+    label: '西药病历',
+    value: 1,
+  },
+  {
+    label: '中药病历',
+    value: 2,
+  },
+];
+
+// 模版权限
+const TEMPLATES_AUTHORITIES = [
+  {
+    label: '私人模版',
+    value: 1,
+  },
+  {
+    label: '公共模版',
+    value: 2,
+  },
+];
+
 export {
   ADMISSION_STATUSES,
   DEPARTMENTS,
@@ -316,5 +340,7 @@ export {
   CHIEF_COMPLAINT_TYPES,
   PRESCRIPTION_TYPES,
   USE_STATUSES,
-  AGE_UNITS
+  AGE_UNITS,
+  TEMPLATES_TYPES,
+  TEMPLATES_AUTHORITIES
 };

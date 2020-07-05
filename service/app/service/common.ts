@@ -10,6 +10,7 @@ class CommonService extends Service {
   async getNumber() {
     const ctx = this.ctx;
     const { name } = ctx.query;
+    let initValue :number | string= 1000
     let modelName = ''
     switch (name) {
       case 'department':
@@ -28,13 +29,18 @@ class CommonService extends Service {
         modelName = 'Roles'
         break;
     
+      case 'medicalRecordTemplate':
+        modelName = 'MedicalRecordTemplates'
+        initValue = 'RZ00001'
+        break;
+    
       default:
         break;
     }
     const allData = modelName && await ctx.model[modelName].findAll({
       order:[['number','DESC']]
     })
-    const number = allData.length ? allData[0].number + 1 : 1000
+    const number = allData.length ? allData[0].number + 1 : initValue
     return number
   }
 }

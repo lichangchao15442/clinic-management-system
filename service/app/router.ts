@@ -10,6 +10,7 @@ export default (app: Application) => {
   router.post('/addDictionary', controller.dictionary.create); // 添加字典表数据
   router.delete('/deleteDictionary', controller.dictionary.destroy); // 删除字典表数据
   router.post('/updateDictionary', controller.dictionary.update); // 编辑字典表数据
+  router.get('/dictionary/getAllDictionary', controller.dictionary.getAllDictionary); // 获取病历信息中数据字典（不分页）
   router.get('/getCheckProjectList', controller.checkProjects.index); // 获取检测项目列表
   router.get('/getUnitList', controller.dictionary.getUnitList); // 获取检测项目单位列表
   router.get('/getProjectTypeList', controller.dictionary.getProjectTypeList); // 获取检测项目类型列表
@@ -43,4 +44,5 @@ export default (app: Application) => {
   router.get('/getRoleDetail', controller.roles.show); // 获取角色详情
   router.delete('/deleteRole', controller.roles.destroy); // 删除角色
   router.get('/getInitNumber', controller.common.getInitNumber); // 获取某个表的最新编号+1
+  router.post('/medicalRecordTemplates/add', controller.medicalRecordTemplates.create); // 新增病历模版
 };

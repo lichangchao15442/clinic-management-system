@@ -11,7 +11,7 @@ interface SelectDropdownFormItemProps {
   formItemProps: {
     label: string;
     name: string;
-    rules: { required: boolean }[]
+    rules?: { required: boolean }[]
   };
   /** 下拉框的数据源 */
   options: { [key: string]: any }[];
@@ -33,7 +33,6 @@ const SelectDropdownFormItem: React.FC<SelectDropdownFormItemProps> = ({ formIte
         extra={<CloseCircleOutlined style={{ fontSize: 20 }} onClick={() => { setIsOpen(false) }} />}
       >
         <div className={styles.menu}>
-          <span>xxx:</span>
           {menu}
         </div>
       </Card>}>

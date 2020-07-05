@@ -8,6 +8,7 @@ import ExportDepartments from '../../../app/controller/departments';
 import ExportDictionary from '../../../app/controller/dictionary';
 import ExportEmployees from '../../../app/controller/employees';
 import ExportHome from '../../../app/controller/home';
+import ExportMedicalRecordTemplates from '../../../app/controller/medicalRecordTemplates';
 import ExportOrders from '../../../app/controller/orders';
 import ExportPatients from '../../../app/controller/patients';
 import ExportRoles from '../../../app/controller/roles';
@@ -21,6 +22,7 @@ declare module 'egg' {
     dictionary: ExportDictionary;
     employees: ExportEmployees;
     home: ExportHome;
+    medicalRecordTemplates: ExportMedicalRecordTemplates;
     orders: ExportOrders;
     patients: ExportPatients;
     roles: ExportRoles;

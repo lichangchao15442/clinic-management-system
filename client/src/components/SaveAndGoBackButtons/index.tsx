@@ -3,9 +3,13 @@ import { Button } from 'antd'
 import { SaveFilled, CaretLeftOutlined } from '@ant-design/icons'
 import { history } from 'umi'
 
-const SaveAndGoBackButtons = () => {
+interface SaveAndGoBackButtonsProsp {
+  loading: boolean; // 保存按钮的加载状态
+}
+
+const SaveAndGoBackButtons: React.FC<SaveAndGoBackButtonsProsp> = ({ loading }) => {
   return <div>
-    <Button type="primary" icon={<SaveFilled />} htmlType="submit">保存</Button>
+    <Button type="primary" icon={<SaveFilled />} htmlType="submit" loading={loading}>保存</Button>
     <Button
       ghost
       type="primary"
