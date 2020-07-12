@@ -1,12 +1,17 @@
-import { Subscription } from 'umi';
+import { Subscription, Effect, Reducer } from 'umi';
 
 import { TemplateMaintenanceState } from './data';
+import { getMedicalRecordTemplateList } from './service';
 
 interface TemplateMaintenanceModel {
   namespace: string;
   state: TemplateMaintenanceState;
-  effects: {};
-  reducers: {};
+  effects: {
+    fetchMedicalRecordTemplateList: Effect;
+  };
+  reducers: {
+    save: Reducer;
+  };
   subscriptions: {
     setup: Subscription;
   };
@@ -15,11 +20,35 @@ interface TemplateMaintenanceModel {
 const Model: TemplateMaintenanceModel = {
   namespace: 'templateMaintenance',
 
-  state: {},
+  state: {
+    medicalRecordTemplateList: [],
+    total: 0,
+  },
 
-  effects: {},
+  effects: {
+    /** 获取病历模版列表 */
+    *fetchMedicalRecordTemplateList({ payload }, { call, put }) {
+      const response = yield call(getMedicalRecordTemplateList, payload);
+      if (response.code === '1') {
+        yield put({
+          type: 'save',
+          payload: {
+            medicalRecordTemplateList: response.data.list,
+            total: response.data.total,
+          },
+        });
+      }
+    },
+  },
 
-  reducers: {},
+  reducers: {
+    save(state, { payload }) {
+      return {
+        ...state,
+        ...payload,
+      };
+    },
+  },
 
   subscriptions: {
     setup({ history, dispatch }) {

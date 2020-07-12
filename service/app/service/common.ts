@@ -40,7 +40,13 @@ class CommonService extends Service {
     const allData = modelName && await ctx.model[modelName].findAll({
       order:[['number','DESC']]
     })
-    const number = allData.length ? allData[0].number + 1 : initValue
+    let number;
+    if (name === 'medicalRecordTemplate') {
+      const num = Number(allData[0].number.split('RZ')[1]) + 1;
+      number = allData.length ? 'RZ' + num.toString().padStart(5, '0') : initValue;
+    } else {
+      number = allData.length ? allData[0].number + 1 : initValue
+    }
     return number
   }
 }

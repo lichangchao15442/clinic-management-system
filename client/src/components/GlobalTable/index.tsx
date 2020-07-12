@@ -70,6 +70,8 @@ const GlobalTable: React.FC<GlobalTableProps> = ({
         key: (pagination.pageNum - 1) * pagination.pageSize + index + 1
       }))
       setData(newData)
+    } else {
+      setData([])
     }
   }, [dataSource])
 

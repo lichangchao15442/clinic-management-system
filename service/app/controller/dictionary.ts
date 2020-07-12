@@ -4,7 +4,7 @@ const Op = require('sequelize').Op
 
 import {toInt, hasValue} from '../service/utils'
 
-class OrdersController extends Controller {
+class DictionaryController extends Controller {
 
   // 查询字典表数据
   async index() {
@@ -273,4 +273,4 @@ class OrdersController extends Controller {
 
 export {}
 
-module.exports = OrdersController;
+module.exports = DictionaryController;

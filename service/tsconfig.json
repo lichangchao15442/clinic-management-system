@@ -22,7 +22,8 @@
     "inlineSourceMap": true,
     "importHelpers": true,
     "lib": [
-      "es2015"
+      "es2015",
+      "es2017.string"
   ]
   },
   "exclude": [

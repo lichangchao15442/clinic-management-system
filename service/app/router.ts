@@ -45,4 +45,5 @@ export default (app: Application) => {
   router.delete('/deleteRole', controller.roles.destroy); // 删除角色
   router.get('/getInitNumber', controller.common.getInitNumber); // 获取某个表的最新编号+1
   router.post('/medicalRecordTemplates/add', controller.medicalRecordTemplates.create); // 新增病历模版
+  router.get('/medicalRecordTemplates/list', controller.medicalRecordTemplates.index); // 获取病历模版列表
 };
