@@ -50,6 +50,9 @@ class PatientsController extends Controller {
           if (key === 'vipLevel') {
             where.vipLevel = requestQuery[key]
           }
+          if (key === 'name') {
+            where.name = requestQuery[key]
+          }
           if (key === 'search') {
             where[Op.or] = [
               {
