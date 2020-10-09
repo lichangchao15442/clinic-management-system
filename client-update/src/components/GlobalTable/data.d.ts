@@ -36,6 +36,8 @@ export interface ITableColumn<T = unknown> extends Omit<ColumnType<T>, ''> {
 }
 
 export interface ITable<T> extends Omit<TableProps<T>, 'loading'> {
+  /** 时间戳（用于请求数据） */
+  timestamp?: number;
   /** model层effects */
   dispatchType: string;
   /** 列配置 */
@@ -51,6 +53,8 @@ export interface ITable<T> extends Omit<TableProps<T>, 'loading'> {
     visible?: boolean;
     /** 文字 */
     text?: string;
+    /** 额外的查询参数 */
+    extraQueryParams?: { [key: string]: any };
     /** 转换搜索数据 */
     onTransformValues?: (values: Store) => { [key: string]: any };
   };

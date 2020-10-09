@@ -12,6 +12,7 @@ import SearchForm from './SearchForm';
 const GlobalTable: React.FC<ITable<ITableColumn>> = <T extends {}>(props: ITable<T>) => {
   // props
   const {
+    timestamp = 0,
     dispatchType,
     dispatch,
     dataSource = [],
@@ -19,10 +20,12 @@ const GlobalTable: React.FC<ITable<ITableColumn>> = <T extends {}>(props: ITable
     showSerialNumber = true,
     pagination: { total } = {},
     scroll,
-    searchConfig,
+    searchConfig = {},
     resetConfig,
     extra
   } = props;
+
+  const { onTransformValues, extraQueryParams = {} } = searchConfig;
 
   const initialQuery = columns.reduce((pre, item) => {
     if ((item.dataIndex || item.formItemProps?.name) && existy(item.initialValue)) {
@@ -41,16 +44,26 @@ const GlobalTable: React.FC<ITable<ITableColumn>> = <T extends {}>(props: ITable
   })
   const [data, setDaata] = useState(dataSource)
 
+  /** 生成最终发送接口的查询条件query */
+  const formatQuery = () => {
+    const { query } = param;
+    const transformValues = onTransformValues ? onTransformValues(query) : query
+    return {
+      ...transformValues,
+      ...extraQueryParams
+    }
+  }
+
   useEffect(() => {
-    const { pagination, query } = param;
+    const { pagination } = param;
     dispatch({
       type: dispatchType,
       payload: {
         ...pagination,
-        query: searchConfig?.onTransformValues ? searchConfig?.onTransformValues(query) : query
+        query: formatQuery()
       }
     })
-  }, [param])
+  }, [param, timestamp])
 
   useEffect(() => {
     let newData = dataSource
