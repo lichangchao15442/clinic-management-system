@@ -15,7 +15,7 @@ interface PatientsManagementModelType {
 }
 
 const PatientsManagementModel: PatientsManagementModelType = {
-  namespace: 'patientsManagement',
+  namespace: 'patients',
 
   state: {
     patientList: [],

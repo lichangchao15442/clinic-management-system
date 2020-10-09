@@ -82,13 +82,13 @@ const columns: ITableColumn<AnyObject>[] = [
 ]
 
 interface PatientsManagementProps {
-  patientsManagement: PatientsManagementStateType;
+  patients: PatientsManagementStateType;
 }
 
 const PatientsManagement: React.FC<PatientsManagementProps> = props => {
   // props
-  const { patientsManagement } = props
-  const { patientList, total } = patientsManagement
+  const { patients } = props
+  const { patientList, total } = patients
 
   /** 按钮组件 */
   const extra = <div>
@@ -123,7 +123,7 @@ const PatientsManagement: React.FC<PatientsManagementProps> = props => {
     <div className="global-container">
       <GlobalTable
         rowKey="number"
-        dispatchType="patientsManagement/fetchPatientList"
+        dispatchType="patients/fetchPatientList"
         columns={columns}
         dataSource={patientList}
         pagination={{ total }}
@@ -134,6 +134,6 @@ const PatientsManagement: React.FC<PatientsManagementProps> = props => {
   </PageHeaderWrapper>
 }
 
-export default connect(({ patientsManagement }: {
-  patientsManagement: PatientsManagementStateType
-}) => ({ patientsManagement }))(PatientsManagement)
+export default connect(({ patients }: {
+  patients: PatientsManagementStateType
+}) => ({ patients }))(PatientsManagement)
