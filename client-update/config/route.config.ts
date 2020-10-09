@@ -15,12 +15,12 @@ export default [
     path: '/patients',
     component: 'Patients/List',
   },
-  // {
-  //   name: '收费管理',
-  //   icon: 'dollar',
-  //   path: '/charge-management',
-  //   component: 'ChargeManagement',
-  // },
+  {
+    name: '收费管理',
+    icon: 'dollar',
+    path: '/charge',
+    component: 'Charge/List',
+  },
   // {
   //   name: '系统设置',
   //   icon: 'setting',
