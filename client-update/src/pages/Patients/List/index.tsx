@@ -9,6 +9,7 @@ import { Store } from 'antd/lib/form/interface';
 import { GlobalTable } from '@/components'
 import { GENDERS, VIPLEVELS } from '@/utils/dataDictionary'
 import { ITableColumn } from '@/components/GlobalTable/data'
+import { handleTrim } from '@/utils/util';
 import { PatientsManagementStateType, PatientType } from '../data'
 import styles from './index.less'
 
@@ -105,18 +106,7 @@ const PatientsManagement: React.FC<PatientsManagementProps> = props => {
   </div>
 
   const onTransformValues = (values: Store) => {
-    const { name = '', phone = '' } = values
-    const formatData: AnyObject = {}
-    if (name) {
-      formatData.name = name.trim()
-    }
-    if (phone) {
-      formatData.phone = phone.trim()
-    }
-    return {
-      ...values,
-      ...formatData
-    }
+    return handleTrim(['name', 'phone'], values);
   }
 
   return <PageHeaderWrapper extra={extra} >

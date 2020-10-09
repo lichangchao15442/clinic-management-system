@@ -50,10 +50,29 @@ const validatePasswordFormat = (value: string) => {
  */
 const existy = (x: any) => x != null;
 
+/**
+ * 对某个对象的某些字段进行统一trim处理
+ * @param trimArray 需要trim的字段集合
+ * @param values 某些字段需要trim处理的对象
+ */
+const handleTrim = (trimArray: string[] = [], values: AnyObject = {}) => {
+  const trimObj: AnyObject = {};
+  trimArray.forEach(item => {
+    if (values[item]) {
+      trimObj[item] = values[item].trim();
+    }
+  });
+  return {
+    ...values,
+    ...trimObj,
+  };
+};
+
 export {
   findPathname,
   validatePhoneFormat,
   validateIDNumberFormat,
   validatePasswordFormat,
   existy,
+  handleTrim
 };
