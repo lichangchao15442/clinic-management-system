@@ -46,7 +46,7 @@ const GENDERS = [
 ];
 
 // VIP等级
-const VIPLEVELS = [
+const VIPLEVELS: { label: string; value: any }[] = [
   {
     label: '非会员',
     value: 0,
@@ -342,5 +342,5 @@ export {
   USE_STATUSES,
   AGE_UNITS,
   TEMPLATES_TYPES,
-  TEMPLATES_AUTHORITIES
+  TEMPLATES_AUTHORITIES,
 };

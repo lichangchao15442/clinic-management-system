@@ -9,12 +9,12 @@ export default [
     path: '/work-bench',
     component: 'WorkBench/List',
   },
-  // {
-  //   name: '患者管理',
-  //   icon: 'user',
-  //   path: '/patients-management',
-  //   component: 'PatientsManagement',
-  // },
+  {
+    name: '患者管理',
+    icon: 'user',
+    path: '/patients',
+    component: 'Patients/List',
+  },
   // {
   //   name: '收费管理',
   //   icon: 'dollar',

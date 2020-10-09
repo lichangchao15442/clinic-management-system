@@ -4,7 +4,7 @@ const Sequelize = require('sequelize');
 
 const Op = Sequelize.Op;
 
-import { toInt, hasValue } from '../utils/utils'
+import { toInt, hasValue } from '../utils/util'
 
 
 class MedicalRecordTemplatesService extends Service { 

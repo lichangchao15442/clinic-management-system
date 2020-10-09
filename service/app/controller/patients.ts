@@ -44,28 +44,11 @@ class PatientsController extends Controller {
               [Op.between]:requestQuery[key]
             }
           }
-          if (key === 'admissionStatus') {
-            where.admissionStatus = requestQuery[key]
-          }
-          if (key === 'vipLevel') {
-            where.vipLevel = requestQuery[key]
-          }
-          if (key === 'name') {
-            where.name = requestQuery[key]
-          }
-          if (key === 'search') {
-            where[Op.or] = [
-              {
-                name: requestQuery[key].trim(),
-              },
-              {
-                phone:requestQuery[key].trim()
-              }
-            ]
+          if (key === 'admissionStatus' || key === 'vipLevel' || key === 'name' || key === 'phone') {
+            where[key] = requestQuery[key]
           }
         }}
     })
-    console.log('where',where)
     const query = { limit: toInt(pageSize), offset: (toInt(pageNum)-1)*toInt(pageSize),where };
     // 所有的患者数据
     const allData = await ctx.model.Patients.findAll({where});

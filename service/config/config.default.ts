@@ -11,7 +11,7 @@ export default (appInfo: EggAppInfo) => {
   config.middleware = [];
 
   config.security = {
-    domainWhiteList: ['http://localhost:8000'],
+    domainWhiteList: ['http://localhost:8000','http://localhost:8001'],
     csrf: {
       enable: false,
     },

@@ -1,6 +1,9 @@
 import { ReactNode } from 'react';
-import { ColumnType } from 'antd/es/table';
+import { ColumnType, TableProps } from 'antd/es/table';
 import { FormItemProps } from 'antd/es/form/FormItem';
+import { Dispatch } from 'umi';
+import { TablePaginationConfig } from 'antd/lib/table/interface';
+import { Store } from 'antd/lib/form/interface';
 
 export interface ITableColumn<T = unknown> extends Omit<ColumnType<T>, ''> {
   /** 在表格中隐藏该控件 */
@@ -30,4 +33,34 @@ export interface ITableColumn<T = unknown> extends Omit<ColumnType<T>, ''> {
   formItemWidgetProps?: { [key: string]: any };
   /** 自定义搜索formItem  */
   renderFormItem?: ReactNode;
+}
+
+export interface ITable<T> extends Omit<TableProps<T>, 'loading'> {
+  /** model层effects */
+  dispatchType: string;
+  /** 列配置 */
+  columns: ITableColumn<T>[];
+  dispatch: Dispatch;
+  /** 是否显示序号（默认显示） */
+  showSerialNumber?: boolean;
+  /** 分页配置 */
+  pagination?: TablePaginationConfig;
+  /** 搜索按钮的配置 */
+  searchConfig?: {
+    /** 显隐 */
+    visible?: boolean;
+    /** 文字 */
+    text?: string;
+    /** 转换搜索数据 */
+    onTransformValues?: (values: Store) => { [key: string]: any };
+  };
+  /** 重置按钮的配置 */
+  resetConfig?: {
+    /** 显隐 */
+    visible?: boolean;
+    /** 文字 */
+    text: string;
+  };
+  /** 额外的组件 */
+  extra?: ReactNode;
 }

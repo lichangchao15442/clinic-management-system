@@ -44,9 +44,16 @@ const validatePasswordFormat = (value: string) => {
   return passwordReg.test(value);
 };
 
+/**
+ * 判断x是否存在（null和undefined为不存在）
+ * @param x
+ */
+const existy = (x: any) => x != null;
+
 export {
   findPathname,
   validatePhoneFormat,
   validateIDNumberFormat,
   validatePasswordFormat,
+  existy,
 };
