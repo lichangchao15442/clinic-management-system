@@ -9,7 +9,7 @@ import { Store } from 'antd/lib/form/interface';
 import { GlobalTable } from '@/components'
 import { GENDERS, VIPLEVELS } from '@/utils/dataDictionary'
 import { ITableColumn } from '@/components/GlobalTable/data'
-import { handleTrim } from '@/utils/util';
+import { handleTrim, download } from '@/utils/util';
 import { PatientsManagementStateType, PatientType } from '../data'
 import styles from './index.less'
 
@@ -102,6 +102,10 @@ const PatientsManagement: React.FC<PatientsManagementProps> = props => {
       ghost
       type="primary"
       icon={<ExportOutlined />}
+      onClick={() => {
+        console.log('导出')
+        download(patientList, columns, '患者数据.xlsx')
+      }}
     >导出</Button>
   </div>
 
