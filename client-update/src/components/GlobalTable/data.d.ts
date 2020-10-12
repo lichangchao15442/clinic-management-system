@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { ColumnType, TableProps } from 'antd/es/table';
 import { FormItemProps } from 'antd/es/form/FormItem';
-import { Dispatch } from 'umi';
+import { Dispatch, Loading } from 'umi';
 import { TablePaginationConfig } from 'antd/lib/table/interface';
 import { Store } from 'antd/lib/form/interface';
 
@@ -43,6 +43,7 @@ export interface ITable<T> extends Omit<TableProps<T>, 'loading'> {
   /** 列配置 */
   columns: ITableColumn<T>[];
   dispatch: Dispatch;
+  loading?: Loading;
   /** 是否显示序号（默认显示） */
   showSerialNumber?: boolean;
   /** 分页配置 */

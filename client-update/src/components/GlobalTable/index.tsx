@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { connect } from 'umi';
+import { connect, Loading } from 'umi';
 import { Table, Card } from 'antd';
 import { Store } from 'antd/lib/form/interface'
 
@@ -22,7 +22,8 @@ const GlobalTable: React.FC<ITable<ITableColumn>> = <T extends {}>(props: ITable
     scroll,
     searchConfig = {},
     resetConfig,
-    extra
+    extra,
+    loading
   } = props;
 
   const { onTransformValues, extraQueryParams = {} } = searchConfig;
@@ -122,6 +123,7 @@ const GlobalTable: React.FC<ITable<ITableColumn>> = <T extends {}>(props: ITable
   return <Card title={<SearchForm columns={columns} onSearch={onSearch} searchConfig={searchConfig} resetConfig={resetConfig} extra={extra} />}>
     <Table
       className={styles.globalTableCard}
+      loading={dispatchType ? loading?.effects[dispatchType] : false}
       columns={columns}
       dataSource={data}
       pagination={{
@@ -138,4 +140,6 @@ const GlobalTable: React.FC<ITable<ITableColumn>> = <T extends {}>(props: ITable
   </Card>
 }
 
-export default connect()(GlobalTable)
+export default connect(({ loading }: {
+  loading: Loading;
+}) => ({ loading }))(GlobalTable)

@@ -5,6 +5,7 @@ import { Store } from 'antd/lib/form/interface'
 
 import { ITableColumn } from './data';
 import { handleFilterOption } from './util';
+import { AnyObject } from 'typings';
 
 interface SearchFormProps<T> {
   /** 搜索项数据 */
@@ -32,7 +33,7 @@ const { Option } = Select;
 const { RangePicker } = DatePicker;
 
 
-const SearchForm = (props: SearchFormProps) => {
+const SearchForm = (props: SearchFormProps<AnyObject>) => {
   // form
   const [form] = Form.useForm()
   // props
@@ -71,7 +72,7 @@ const SearchForm = (props: SearchFormProps) => {
       a.searchOrder - b.searchOrder
     )
     setNewColumns(columnsData)
-  }, [])
+  }, [columns])
 
   const renderComponent = (column: ITableColumn<AnyObject>) => {
     const { searchType, title, searchEnum = [], searchEnumConfig, formItemWidgetProps } = column;
