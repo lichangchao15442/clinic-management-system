@@ -159,6 +159,12 @@ const download = (
   document.body.removeChild(a);
 };
 
+/** 获取登录系统的用户名 */
+const getLoginUserName = () => {
+  // TODO: 获取存在本地的登录用户信息
+  return '顾兰兰';
+};
+
 export {
   findPathname,
   validatePhoneFormat,
@@ -167,4 +173,5 @@ export {
   existy,
   handleTrim,
   download,
+  getLoginUserName,
 };
