@@ -22,14 +22,8 @@ class DictionaryController extends Controller {
           //     [Op.between]:requestQuery[key]
           //   }
           // }
-          if (key === 'dictionaryType') {
-            where.dictionaryType = requestQuery[key]
-          }
-          if (key === 'subDictionaryType') {
-            where.subDictionaryType = requestQuery[key]
-          }
-          if (key === 'type') {
-            where.type = requestQuery[key]
+          if (key === 'dictionaryType' || key==='subDictionaryType' || key ==='type' || key==='name') {
+            where[key] = requestQuery[key]
           }
           if (key === 'search') {
             where[Op.or] = [
