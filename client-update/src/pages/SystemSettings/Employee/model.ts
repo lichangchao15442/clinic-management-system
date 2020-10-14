@@ -14,6 +14,7 @@ import {
   addEmployee,
   updateEmployee,
   deleteEmployee,
+  addDepartment,
   updateDepartment,
   deleteDepartment,
   updateRole,
@@ -46,6 +47,8 @@ interface EmployeeManagementModelType {
     updateEmployee: Effect;
     /** 删除员工 */
     deleteEmployee: Effect;
+    /** 新增科室 */
+    addDepartment: Effect;
     /** 编辑科室 */
     updateDepartment: Effect;
     /** 删除科室 */
@@ -179,6 +182,11 @@ const EmployeeManagementModel: EmployeeManagementModelType = {
     },
     *deleteEmployee({ payload, callback }, { call }) {
       const res = yield call(deleteEmployee, payload);
+      const { code } = res;
+      code === '1' && callback && callback();
+    },
+    *addDepartment({ payload, callback }, { call }) {
+      const res = yield call(addDepartment, payload);
       const { code } = res;
       code === '1' && callback && callback();
     },

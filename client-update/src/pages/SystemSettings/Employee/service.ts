@@ -90,6 +90,12 @@ export const deleteEmployee = (data: { id: string }) =>
     data,
   });
 
+export const addDepartment = (data: AnyObject) =>
+  request('/addDepartment', {
+    method: 'POST',
+    data,
+  });
+
 export const updateDepartment = (data: AnyObject) =>
   request('/updateDepartment', {
     method: 'POST',
