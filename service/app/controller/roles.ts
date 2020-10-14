@@ -1,5 +1,6 @@
 const Controller = require('egg').Controller;
 
+// import { request } from 'express';
 import { toInt, hasValue } from '../service/utils'
 
 const Op = require('sequelize').Op
@@ -14,6 +15,9 @@ class RolesController extends Controller {
     Object.keys(requestQuery).map(key => {
       if (requestQuery.hasOwnProperty(key)) {
         if (hasValue(requestQuery[key])) {
+          if (key === 'name') {
+            where[key] = requestQuery[key]
+          }
           if (key === 'search') {
             where[Op.or] = [
               {

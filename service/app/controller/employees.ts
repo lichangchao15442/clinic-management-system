@@ -25,8 +25,8 @@ class EmployeesController extends Controller {
           // if (key === 'admissionStatus') {
           //   where.admissionStatus = requestQuery[key]
           // }
-          if (key === 'department') {
-            where.department = requestQuery[key]
+          if (key === 'department' || key==='name') {
+            where[key] = requestQuery[key]
           }
           if (key === 'search') {
             where[Op.or] = [
