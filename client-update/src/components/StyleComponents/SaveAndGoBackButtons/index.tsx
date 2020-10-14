@@ -5,7 +5,7 @@ import { history } from 'umi';
 
 interface SaveAndGoBackButtonsProsp {
   /** 保存按钮的加载状态 */
-  loading: boolean; 
+  loading: boolean | undefined; 
 };
 
 const SaveAndGoBackButtons: React.FC<SaveAndGoBackButtonsProsp> = ({ loading }) => {
