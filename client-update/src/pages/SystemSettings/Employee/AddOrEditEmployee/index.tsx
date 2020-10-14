@@ -73,10 +73,11 @@ const AddOrEditEmployee: React.FC<AddOrEditEmployeeProps> = props => {
 
   /** 提交表单且数据验证成功后回调事件 */
   const onFinish = (values: Store) => {
+    const { address = [], role = [] } = values;
     const data: AnyObject = {
       ...values,
-      address: values.address.join(" "), // 处理地址
-      role: values.role.join(" "), // 处理角色
+      address: address.join(" "), // 处理地址
+      role: role.join(" "), // 处理角色
       creator: getLoginUserName(),
       ownClinic: getLoginClinicName(),
     };
