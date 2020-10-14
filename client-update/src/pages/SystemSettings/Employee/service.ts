@@ -83,3 +83,33 @@ export const updateEmployee = (data: AnyObject) =>
     method: 'POST',
     data,
   });
+
+export const deleteEmployee = (data: { id: string }) =>
+  request('/deleteEmployee', {
+    method: 'DELETE',
+    data,
+  });
+
+export const updateDepartment = (data: AnyObject) =>
+  request('/updateDepartment', {
+    method: 'POST',
+    data,
+  });
+
+export const deleteDepartment = (data: { id: string }) =>
+  request('/deleteDepartment', {
+    method: 'DELETE',
+    data,
+  });
+
+export const updateRole = (data: { id: string }) =>
+  request('/updateRole', {
+    method: 'POST',
+    data,
+  });
+
+export const deleteRole = (data: { id: string }) =>
+  request('/deleteRole', {
+    method: 'DELETE',
+    data,
+  });

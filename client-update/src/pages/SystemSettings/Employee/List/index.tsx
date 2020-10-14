@@ -1,18 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react';
 import { Radio, Switch, Button, Select, message, Card } from 'antd';
-import { connect, history, Dispatch } from 'umi'
-import moment from 'moment'
-import { RadioChangeEvent } from 'antd/lib/radio'
-import { PlusCircleFilled } from '@ant-design/icons'
+import { connect, history, Dispatch } from 'umi';
+import moment from 'moment';
+import { RadioChangeEvent } from 'antd/lib/radio';
+import { PlusCircleFilled } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
 import { DeleteConfirmModal, GlobalTable } from '@/components'
 import { ITableColumn } from '@/components/GlobalTable/data.d';
-import request from '@/utils/request'
-import { AnyObject, FormItemType } from 'typings'
-import { EmployeeManagementState, EmployeeType, DepartmentType, RoleType } from '../data'
+import request from '@/utils/request';
+import { AnyObject, FormItemType } from 'typings';
+import { EmployeeManagementState, EmployeeType, DepartmentType, RoleType } from '../data';
 
-const { Option } = Select
+const { Option } = Select;
 
 interface CurrentBasicDataType {
   label: string;
@@ -22,16 +22,16 @@ interface CurrentBasicDataType {
   addPath: string; // 点击新增跳转的页面
   columns: ITableColumn<AnyObject>[];
   filterFormItems?: FormItemType[];
-}
+};
 
 interface EmployeeManagementProps {
   employee: EmployeeManagementState;
   dispatch: Dispatch;
-}
+};
 
 const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
   // props
-  const { employee: { list, total, departmentList, currentListName }, dispatch } = props
+  const { employee: { list, total, departmentList, currentListName }, dispatch } = props;
 
   // 单独tab的数据
   const radios: CurrentBasicDataType[] = [
@@ -230,91 +230,87 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
         }
       ]
     }
-  ]
+  ];
 
   // useState
-  const [currentBasicData, setCurrentBasicData] = useState<CurrentBasicDataType>(radios[0]) // 当前选中面板的基础信息
-  const [isRefresh, setIsRefresh] = useState(false) // 刷新列表页面的开关
-  const [deleteConfirmModalVisible, setDeleteConfirmModalVisible] = useState(false) // 确认删除弹出框的显隐
+  const [currentBasicData, setCurrentBasicData] = useState<CurrentBasicDataType>(radios[0]); // 当前选中面板的基础信息
+  const [deleteConfirmModalVisible, setDeleteConfirmModalVisible] = useState(false); // 确认删除弹出框的显隐
   const [timestamp, setTimestamp] = useState(0);
 
   // useRef
-  const currentConfirmData = useRef({ type: '', id: 0, content: '' }) // 当前删除数据的类型和确认删除框的内容
+  const currentConfirmData = useRef({ type: '', id: 0, content: '' });// 当前删除数据的类型和确认删除框的内容
 
   useEffect(() => {
     // 改变当前选中的列表的数据
-    const radioData = radios.find(item => item.key === currentListName)
-    radioData && setCurrentBasicData(radioData)
+    const radioData = radios.find(item => item.key === currentListName);
+    radioData && setCurrentBasicData(radioData);
     setTimestamp(new Date().getTime());
-  }, [currentListName])
+  }, [currentListName]);
 
   /**
    * 统一调用删除接口的处理
    */
   const doRemove = () => {
-    const { type, id } = currentConfirmData.current
-    let url = ''
-    let label = ''
+    const { type, id } = currentConfirmData.current;
+    let dispatchType = '';
+    let label = '';
     switch (type) {
       case 'employee':
-        url = '/deleteEmployee'
-        label = '员工'
+        dispatchType = 'employee/deleteEmployee';
+        label = '员工';
         break;
 
       case 'department':
-        url = '/deleteDepartment'
-        label = '科室'
+        dispatchType = 'employee/deleteDepartment';
+        label = '科室';
         break;
 
       case 'role':
-        url = '/deleteRole'
-        label = '角色'
+        dispatchType = 'employee/deleteRole';
+        label = '角色';
         break;
 
       default:
         break;
     }
-    const promise = request(url, {
-      method: 'DELETE',
-      data: { id }
-    })
-    promise.then((res) => {
-      if (res.code === '1') {
+    dispatch({
+      type: dispatchType,
+      payload: { id },
+      callback: () => {
         // 操作成功提示
         message.success(`${label}删除成功！`)
         // 删除确认框隐藏
         setDeleteConfirmModalVisible(false)
-        // 刷新当前列表
-        setIsRefresh(isRefresh => !isRefresh)
+        setTimestamp(new Date().getTime());
       }
-    })
+    });
   }
-
+    ;
   /**
    * 统一的删除功能(开启确认删除弹出框并根据删除的数据类别设置不同的内容)
    * @param name 删除数据所属分类的名字
    * @param id 删除数据的ID
    */
   const onRemove = (name: string, id: number) => {
-    setDeleteConfirmModalVisible(true)
+    setDeleteConfirmModalVisible(true);
 
-    let content = ''
+    let content = '';
     switch (name) {
       case 'employee':
-        content = '删除后无法恢复，确定要删除此员工信息吗？'
+        content = '删除后无法恢复，确定要删除此员工信息吗？';
         break;
       case 'department':
-        content = '科室正在使用，确定要删除此科室吗？'
+        content = '科室正在使用，确定要删除此科室吗？';
         break;
       case 'role':
-        content = '角色正在使用，确定要删除此角色吗？'
+        content = '角色正在使用，确定要删除此角色吗？';
         break;
 
       default:
         break;
     }
-    currentConfirmData.current = { type: name, id, content }
-  }
+    currentConfirmData.current = { type: name, id, content };
+  };
 
   /**
    * 统一的改变状态功能
@@ -323,41 +319,39 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
    * @param id 该条数据的ID
    */
   const onChangeStatus = (name: string, status: boolean, id: number) => {
-    let url = ''
-    let label = ''
+    let dispatchType = '';
+    let label = '';
     switch (name) {
       case 'employee':
-        url = '/updateEmployee'
-        label = '员工'
+        dispatchType = 'employee/updateEmployee';
+        label = '员工';
         break;
 
       case 'department':
-        url = '/updateDepartment'
-        label = '科室'
+        dispatchType = 'employee/updateDepartment';
+        label = '科室';
         break;
 
       case 'role':
-        url = '/updateRole'
-        label = '角色'
+        dispatchType = 'employee/updateRole';
+        label = '角色';
         break;
 
       default:
         break;
     }
-    const promise = request(url, {
-      method: 'POST',
-      data: {
+    dispatch({
+      type: dispatchType,
+      payload: {
         id,
         status
-      }
-    })
-    promise.then((res) => {
-      if (res.code === '1') {
+      },
+      callback: () => {
         message.success(`${label}${status ? '启用' : '停用'}成功`)
-        setIsRefresh(isRefresh => !isRefresh)
+        setTimestamp(new Date().getTime());
       }
-    })
-  }
+    });
+  };
 
 
   /** 选项变化时的回调 */
@@ -371,14 +365,13 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
     });
   };
 
-  // const extra =
-
   const deleteConfirmModalProps = {
     visible: deleteConfirmModalVisible,
     content: currentConfirmData.current.content,
     onOk: doRemove,
     onCancel: () => { setDeleteConfirmModalVisible(false) }
-  }
+  };
+
   return <PageHeaderWrapper>
     <div className="global-container">
       <Card title={<Radio.Group
@@ -402,14 +395,13 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
           pagination={{ total }}
           scroll={{ x: 2000 }}
           timestamp={timestamp}
-        // searchConfig={{extraQueryParams:{}}}
         />
       </Card>
     </div>
     <DeleteConfirmModal {...deleteConfirmModalProps} />
-  </PageHeaderWrapper>
-}
+  </PageHeaderWrapper>;
+};
 
 export default connect(({ employee }: {
   employee: EmployeeManagementState
-}) => ({ employee }))(EmployeeManagement)
+}) => ({ employee }))(EmployeeManagement);

@@ -12,7 +12,12 @@ import {
   fetchDepartmentDetail,
   fetchRoleDetail,
   addEmployee,
-  updateEmployee
+  updateEmployee,
+  deleteEmployee,
+  updateDepartment,
+  deleteDepartment,
+  updateRole,
+  deleteRole,
 } from './service';
 
 interface EmployeeManagementModelType {
@@ -39,6 +44,16 @@ interface EmployeeManagementModelType {
     addEmployee: Effect;
     /** 编辑员工 */
     updateEmployee: Effect;
+    /** 删除员工 */
+    deleteEmployee: Effect;
+    /** 编辑科室 */
+    updateDepartment: Effect;
+    /** 删除科室 */
+    deleteDepartment: Effect;
+    /** 编辑角色 */
+    updateRole: Effect;
+    /** 删除角色 */
+    deleteRole: Effect;
   };
   reducers: {
     save: Reducer;
@@ -162,6 +177,31 @@ const EmployeeManagementModel: EmployeeManagementModelType = {
       const { code } = res;
       code === '1' && callback && callback();
     },
+    *deleteEmployee({ payload, callback }, { call }) {
+      const res = yield call(deleteEmployee, payload);
+      const { code } = res;
+      code === '1' && callback && callback();
+    },
+    *updateDepartment({ payload, callback }, { call }) {
+      const res = yield call(updateDepartment, payload);
+      const { code } = res;
+      code === '1' && callback && callback();
+    },
+    *deleteDepartment({ payload, callback }, { call }) {
+      const res = yield call(deleteDepartment, payload);
+      const { code } = res;
+      code === '1' && callback && callback();
+    },
+    *updateRole({ payload, callback }, { call }) {
+      const res = yield call(updateRole, payload);
+      const { code } = res;
+      code === '1' && callback && callback();
+    },
+    *deleteRole({ payload, callback }, { call }) {
+      const res = yield call(deleteRole, payload);
+      const { code } = res;
+      code === '1' && callback && callback();
+    },
   },
 
   reducers: {
@@ -192,9 +232,7 @@ const EmployeeManagementModel: EmployeeManagementModelType = {
               operationType: 'add',
             },
           });
-        } else if (
-          pathname.includes('/system-settings/employee/edit')
-        ) {
+        } else if (pathname.includes('/system-settings/employee/edit')) {
           // 改变新增与编辑共用页面的操作类型为add
           dispatch({
             type: 'common/save',
