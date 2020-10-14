@@ -108,6 +108,12 @@ export const deleteDepartment = (data: { id: string }) =>
     data,
   });
 
+export const addRole = (data: { id: string }) =>
+  request('/addRole', {
+    method: 'POST',
+    data,
+  });
+
 export const updateRole = (data: { id: string }) =>
   request('/updateRole', {
     method: 'POST',
