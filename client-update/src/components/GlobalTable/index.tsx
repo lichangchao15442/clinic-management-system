@@ -120,9 +120,8 @@ const GlobalTable: React.FC<ITable<ITableColumn>> = <T extends {}>(props: ITable
     }))
   }
 
-  return <Card title={<SearchForm columns={columns} onSearch={onSearch} searchConfig={searchConfig} resetConfig={resetConfig} extra={extra} />}>
+  return <Card className={styles.globalTableCard} bordered={false} title={<SearchForm columns={columns} onSearch={onSearch} searchConfig={searchConfig} resetConfig={resetConfig} extra={extra} />}>
     <Table
-      className={styles.globalTableCard}
       loading={dispatchType ? loading?.effects[dispatchType] : false}
       columns={columns}
       dataSource={data}
