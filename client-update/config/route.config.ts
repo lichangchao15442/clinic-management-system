@@ -31,56 +31,56 @@ export default [
         path: '/system-settings/dictionary',
         component: 'SystemSettings/Dictionary',
       },
-      // {
-      //   name: '员工管理',
-      //   path: '/system-settings/employee-management',
-      //   menu: {
-      //     hideChildren: true,
-      //   },
-      //   routes: [
-      //     {
-      //       name: '员工管理',
-      //       path: '/system-settings/employee-management',
-      //       component: 'SystemSettings/EmployeeManagement',
-      //     },
-      //     {
-      //       name: '员工管理',
-      //       path: '/system-settings/employee-management/add-employee',
-      //       component:
-      //         'SystemSettings/EmployeeManagement/components/AddOrEditEmployee',
-      //     },
-      //     {
-      //       name: '员工管理',
-      //       path: '/system-settings/employee-management/edit-employee',
-      //       component:
-      //         'SystemSettings/EmployeeManagement/components/AddOrEditEmployee',
-      //     },
-      //     {
-      //       name: '员工管理',
-      //       path: '/system-settings/employee-management/add-department',
-      //       component:
-      //         'SystemSettings/EmployeeManagement/components/AddOrEditDepartment',
-      //     },
-      //     {
-      //       name: '员工管理',
-      //       path: '/system-settings/employee-management/edit-department',
-      //       component:
-      //         'SystemSettings/EmployeeManagement/components/AddOrEditDepartment',
-      //     },
-      //     {
-      //       name: '员工管理',
-      //       path: '/system-settings/employee-management/add-role',
-      //       component:
-      //         'SystemSettings/EmployeeManagement/components/AddOrEditRole',
-      //     },
-      //     {
-      //       name: '员工管理',
-      //       path: '/system-settings/employee-management/edit-role',
-      //       component:
-      //         'SystemSettings/EmployeeManagement/components/AddOrEditRole',
-      //     },
-      //   ],
-      // },
+      {
+        name: '员工管理',
+        path: '/system-settings/employee',
+        menu: {
+          hideChildren: true,
+        },
+        routes: [
+          {
+            name: '员工管理',
+            path: '/system-settings/employee',
+            component: 'SystemSettings/Employee/List',
+          },
+          {
+            name: '新增员工',
+            path: '/system-settings/employee/add-employee',
+            component:
+              'SystemSettings/Employee/AddOrEditEmployee',
+          },
+          {
+            name: '编辑员工',
+            path: '/system-settings/employee/edit-employee',
+            component:
+              'SystemSettings/Employee/AddOrEditEmployee',
+          },
+          {
+            name: '新增科室',
+            path: '/system-settings/employee/add-department',
+            component:
+              'SystemSettings/Employee/AddOrEditDepartment',
+          },
+          {
+            name: '编辑科室',
+            path: '/system-settings/employee/edit-department',
+            component:
+              'SystemSettings/Employee/AddOrEditDepartment',
+          },
+          {
+            name: '新增角色',
+            path: '/system-settings/employee/add-role',
+            component:
+              'SystemSettings/Employee/AddOrEditRole',
+          },
+          {
+            name: '编辑角色',
+            path: '/system-settings/employee/edit-role',
+            component:
+              'SystemSettings/Employee/AddOrEditRole',
+          },
+        ],
+      },
       // {
       //   name: '检查项目设置',
       //   path: '/system-settings/check-project-setting',
