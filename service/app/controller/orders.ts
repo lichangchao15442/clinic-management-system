@@ -44,11 +44,8 @@ class OrdersController extends Controller {
               [Op.between]:requestQuery[key]
             }
           }
-          if (key === 'type') {
-            where.type = requestQuery[key]
-          }
-          if (key === 'chargeStatus') {
-            where.chargeStatus = requestQuery[key]
+          if (key === 'type' || key==='chargeStatus' || key==='number' || key==='name') {
+            where[key]= requestQuery[key]
           }
           if (key === 'search') {
             where[Op.or] = [
@@ -56,7 +53,7 @@ class OrdersController extends Controller {
                 name: requestQuery[key].trim(),
               },
               {
-                number:requestQuery[key].trim()
+                number: requestQuery[key].trim()
               }
             ]
           }
