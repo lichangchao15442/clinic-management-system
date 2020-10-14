@@ -165,6 +165,12 @@ const getLoginUserName = () => {
   return '顾兰兰';
 };
 
+/** 获取登录系统的诊所名 */
+const getLoginClinicName = () => {
+  // TODO: 应为当前登录系统的诊所，暂且写死
+  return '仁心诊所';
+};
+
 export {
   findPathname,
   validatePhoneFormat,
@@ -174,4 +180,5 @@ export {
   handleTrim,
   download,
   getLoginUserName,
+  getLoginClinicName,
 };
