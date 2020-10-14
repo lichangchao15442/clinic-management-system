@@ -8,7 +8,6 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
 import { DeleteConfirmModal, GlobalTable } from '@/components'
 import { ITableColumn } from '@/components/GlobalTable/data.d';
-import request from '@/utils/request';
 import { AnyObject, FormItemType } from 'typings';
 import { EmployeeManagementState, EmployeeType, DepartmentType, RoleType } from '../data';
 
@@ -55,7 +54,8 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
         {
           dataIndex: 'name',
           title: '员工姓名',
-          align: 'center'
+          align: 'center',
+          searchType: 'input'
         },
         {
           dataIndex: 'age',
@@ -76,6 +76,12 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
           dataIndex: 'department',
           title: '所属科室',
           align: 'center',
+          searchType: 'select',
+          searchEnum: departmentList,
+          searchEnumConfig: {
+            labelField: 'name',
+            valueField: 'id'
+          }
         },
         {
           dataIndex: 'role',
@@ -140,7 +146,8 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
         {
           dataIndex: 'name',
           title: '科室名称',
-          align: 'center'
+          align: 'center',
+          searchType: 'input'
         },
         {
           dataIndex: 'introduction',
@@ -195,7 +202,8 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
         {
           dataIndex: 'name',
           title: '角色名称',
-          align: 'center'
+          align: 'center',
+          searchType: 'input'
         },
         {
           dataIndex: 'description',
@@ -371,6 +379,8 @@ const EmployeeManagement: React.FC<EmployeeManagementProps> = props => {
     onOk: doRemove,
     onCancel: () => { setDeleteConfirmModalVisible(false) }
   };
+
+  console.log('currentBasicData', currentBasicData)
 
   return <PageHeaderWrapper>
     <div className="global-container">
